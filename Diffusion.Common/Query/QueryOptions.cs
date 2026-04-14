@@ -30,6 +30,7 @@ public class QueryOptions
     public IReadOnlyCollection<int> AlbumIds { get; set; }
     public IReadOnlyCollection<ModelInfo> Models { get; set; }
     public IReadOnlyCollection<int> TagIds { get; set; }
+    public IReadOnlyCollection<int> ExcludeTagIds { get; set; }
 
     public SearchView SearchView { get; set; }
     public bool SearchNodes { get; set; }

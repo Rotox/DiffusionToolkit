@@ -64,9 +64,21 @@ namespace Diffusion.Toolkit.Pages
             ServiceLocator.MainModel.SelectedTagsCount = selectedTags.Count;
             ServiceLocator.MainModel.HasSelectedTags = selectedTags.Any();
 
+            var tagFilterView = (TagFilterView)((FrameworkElement)sender).DataContext;
+            if (!tagFilterView.IsTicked) tagFilterView.IsExcluded = false;
+
             SearchImages(null);
         }
+        private void TagNotCheck_OnClick(object sender, RoutedEventArgs e)
+        {
+            var tagFilterView = (TagFilterView)((FrameworkElement)sender).DataContext;
+            
+            var selectedTags = ServiceLocator.MainModel.Tags.Where(d => d.IsTicked).ToList();
+            ServiceLocator.MainModel.SelectedTagsCount = selectedTags.Count;
+            ServiceLocator.MainModel.HasSelectedTags = selectedTags.Any();
 
+            SearchImages(null);
+        }
 
         private void Model_OnClick(object sender, RoutedEventArgs e)
         {

@@ -778,7 +778,8 @@ namespace Diffusion.Toolkit.Pages
 
                 var albums = _model.MainModel.Albums.Where(d => d.IsTicked).Select(d => d.Id).ToList();
                 var models = _model.MainModel.ImageModels.Where(d => d.IsTicked).Select(d => new ModelInfo { Name = d.Name, Hash = d.Hash, HashV2 = d.Hashv2 }).ToList();
-                var tags = _model.MainModel.Tags.Where(d => d.IsTicked).Select(d => d.Id).ToList();
+                var tags = _model.MainModel.Tags.Where(d => d.IsTicked && !d.IsExcluded).Select(d => d.Id).ToList();
+                var excludeTags = _model.MainModel.Tags.Where(d => d.IsTicked && d.IsExcluded).Select(d => d.Id).ToList();
 
                 if (queryOptions != null)
                 {
@@ -838,6 +839,7 @@ namespace Diffusion.Toolkit.Pages
                         AlbumIds = albums,
                         Models = models,
                         TagIds = tags,
+                        ExcludeTagIds = excludeTags,
                         TagsMode = _model.TagsMode,
                         Folder = _model.FolderPath == RootFolders ? null : _model.FolderPath,
                         SearchNodes = _model.SearchSettings.SearchNodes,

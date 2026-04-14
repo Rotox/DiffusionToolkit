@@ -707,12 +707,14 @@
                                             <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=MainModel.Tags}" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid Background="Transparent" HorizontalAlignment="Stretch" Margin="2,0,2,0">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="20"/>
-                                                                <ColumnDefinition/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding IsTicked}" Click="TagCheck_OnClick"></CheckBox>
+
+							<Grid Background="Transparent" HorizontalAlignment="Stretch" Margin="2,0,2,0">
+							    <Grid.ColumnDefinitions>
+							        <ColumnDefinition Width="20"/>
+							        <ColumnDefinition/>
+							        <ColumnDefinition Width="Auto"/>
+							    </Grid.ColumnDefinitions>
+							    <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding IsTicked}" Click="TagCheck_OnClick"></CheckBox>
                                                             <Button Grid.Column="1" Style="{StaticResource SmallButton}" 
                                                                 Tag="{Binding .}"
                                                                 AllowDrop="True" 
@@ -749,7 +751,43 @@
                                                                         </Grid>
                                                                     </ControlTemplate>
                                                                 </Button.Template>
-                                                            </Button>
+							    </Button>
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,2,0">
+                                                                <StackPanel.Style>
+                                                                    <Style TargetType="StackPanel">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsTicked}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </StackPanel.Style>
+                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsExcluded}" Click="TagNotCheck_OnClick">
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsExcluded}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="Red"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                                                <Label FontSize="11" VerticalAlignment="Center" Padding="2,0,0,0">
+                                                                    <Label.Style>
+                                                                        <Style TargetType="Label">
+                                                                            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsExcluded}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Label.Style>
+                                                                    Not
+                                                                </Label>
+                                                            </StackPanel>
                                                         </Grid>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>

@@ -204,6 +204,15 @@ public static class QueryCombiner
                 }
             }
         }
+        
+        if (options.ExcludeTagIds is { Count: > 0 })
+        {
+            foreach (var tagId in options.ExcludeTagIds)
+            {
+                filters.Add($"SELECT m1.Id FROM Image m1 WHERE m1.Id NOT IN (SELECT ImageId FROM ImageTag WHERE TagId = ?)");
+                bindings = bindings.Append(tagId);
+            }
+        }
 
         if (options.Models is { Count: > 0 })
         {

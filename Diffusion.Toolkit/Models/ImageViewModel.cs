@@ -324,6 +324,16 @@ public class TagFilterView : BaseNotify
     public bool IsTicked
     {
         get;
+        set
+        {
+            SetField(ref field, value);
+            if (!value) IsExcluded = false;
+        }
+    }
+
+    public bool IsExcluded
+    {
+        get;
         set => SetField(ref field, value);
     }
 }
