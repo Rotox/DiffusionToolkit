@@ -29,14 +29,14 @@ public class UpdateChecker
     {
         var releases = await Client.GetReleases(_cts.Token);
 
-        return releases.OrderByDescending(r => r.published_at).First();
+        return releases.OrderByDescending(r => r.published_at).FirstOrDefault();
     }
-
-
 
     public async Task<bool> CheckForUpdate(string? path = null)
     {
         LatestRelease = await GetLatestRelease();
+
+        if (LatestRelease == null) return false;
 
         var localVersion = SemanticVersionHelper.GetLocalVersion(path);
 
