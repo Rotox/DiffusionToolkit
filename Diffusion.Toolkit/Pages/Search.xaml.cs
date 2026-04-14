@@ -1155,32 +1155,18 @@ namespace Diffusion.Toolkit.Pages
 
                     imageViewModel.ImageTags = ServiceLocator.TagService.GetImageTagViews(imageViewModel.Id);
 
-                    var notFound = GetLocalizedText("Metadata.Modelname.NotFound");
-
-                    if (_modelLookup != null)
-                    {
-                        var models = _modelLookup.Where(m =>
-                            !string.IsNullOrEmpty(parameters.ModelHash) &&
-                            (String.Equals(m.Hash, parameters.ModelHash, StringComparison.CurrentCultureIgnoreCase)
-                             ||
-                             (m.SHA256 != null && string.Equals(m.SHA256.Substring(0, parameters.ModelHash.Length), parameters.ModelHash, StringComparison.CurrentCultureIgnoreCase))
-                             ||
-                             parameters.Model == m.Filename
-                            ));
-
-                        if (models.Any())
-                        {
-                            imageViewModel.ModelName = string.Join(", ", models.Select(m => m.Filename).Distinct());
-                        }
-                        else
-                        {
-                            imageViewModel.ModelName = notFound;
-                        }
-                    }
-                    else
-                    {
-                        imageViewModel.ModelName = notFound;
-                    }
+                if (!string.IsNullOrEmpty(parameters.Model))
+                {
+                    imageViewModel.ModelName = parameters.Model;
+                }
+                else if (!string.IsNullOrEmpty(parameters.ModelHash))
+                {
+                    imageViewModel.ModelName = parameters.ModelHash;
+                }
+                else
+                {
+                    imageViewModel.ModelName = GetLocalizedText("Metadata.Modelname.NotFound");
+                }
 
                 }
 
