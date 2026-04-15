@@ -37,9 +37,7 @@ Thanks to Bill Meeks for putting together a demonstration video. This is for an 
 
 * Currently runs on Windows only
 
-* [Download](https://github.com/Rotox/DiffusionToolkit/releases/latest
-
-) the latest release
+* [Download](https://github.com/Rotox/DiffusionToolkit/releases/latest) the latest release
 
     * Look for **> Assets** under the latest release, expand it, then grab the zip file **Diffusion.Toolkit.v1.x.zip**.
 
