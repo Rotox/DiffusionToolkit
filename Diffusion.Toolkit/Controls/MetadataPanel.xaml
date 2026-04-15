@@ -122,42 +122,36 @@
                         </local:AccordionControl>
                         <local:AccordionControl x:Name="LoraMetadata"
                                                 Margin="0,0,0,5"
-                                                HeaderBackground="#80000000" Header="LoRAs"
+                                                HeaderBackground="#80000000" Header="LoRA NAME"
                                                 Visibility="{Binding Loras, Converter={StaticResource nullToVis}}">
-                            <Grid Background="{x:Null}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Background="{x:Null}">
+                            <local:AccordionControl.ButtonAreaContent>
+                                <Grid Background="{x:Null}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="100"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Style="{DynamicResource SmallCaps}" Content="NAME"/>
-                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="WEIGHT"/>
+                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="WEIGHT" HorizontalContentAlignment="Center"/>
                                 </Grid>
-                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Loras}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid Background="{x:Null}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition Width="100"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBox Grid.Column="0" FontSize="14" BorderThickness="0"
-                                                         IsReadOnly="True" Padding="5" Background="Transparent"
-                                                         TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
-                                                <TextBox Grid.Column="1" FontSize="14" BorderThickness="0"
-                                                         IsReadOnly="True" Padding="5" Background="Transparent"
-                                                         Text="{Binding Weight}"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
-                        </local:AccordionControl>
-
+                            </local:AccordionControl.ButtonAreaContent>
+                            <ItemsControl ItemsSource="{Binding Loras}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="{x:Null}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="100"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" FontSize="14" BorderThickness="0"
+                                                    IsReadOnly="True" Padding="5" Background="Transparent"
+                                                    TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
+                                            <TextBox Grid.Column="1" FontSize="14" BorderThickness="0"
+                                                    IsReadOnly="True" Padding="0" Background="Transparent"
+                                                    TextAlignment="Center" Text="{Binding Weight}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </local:AccordionControl>                       
                         <local:AccordionControl x:Name="SeedMetadata" 
                                                    Margin="0,0,0,5"
                                                    State="{Binding MetadataSection.SeedState, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=UserControl}, Mode=TwoWay}"   HeaderBackground="#80000000" Header="{lex:Loc Metadata.Seed}">

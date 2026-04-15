@@ -66,18 +66,7 @@
     <None Remove="Localization\default.json" />
     <None Remove="Localization\es-ES.json" />
     <None Remove="Localization\fr-FR.json" />
-    <None Remove="Release Notes\What%27s New v1.0.md" />
-    <None Remove="Release Notes\What%27s New v1.1.md" />
-    <None Remove="Release Notes\What%27s New v1.10.0.md" />
-    <None Remove="Release Notes\What%27s New v1.2.md" />
-    <None Remove="Release Notes\What%27s New v1.3.md" />
-    <None Remove="Release Notes\What%27s New v1.4.md" />
-    <None Remove="Release Notes\What%27s New v1.5.1.md" />
-    <None Remove="Release Notes\What%27s New v1.5.md" />
-    <None Remove="Release Notes\What%27s New v1.6.1.md" />
-    <None Remove="Release Notes\What%27s New v1.6.md" />
-    <None Remove="Release Notes\What%27s New v1.7.0.md" />
-    <None Remove="Release Notes\What%27s New v1.8.0.md" />
+    <None Remove="Release Notes\*.md" />
     <None Remove="SearchHelp.md" />
     <None Remove="Tips.md" />
     <None Remove="Tools\comfy-nodes-2.json" />
@@ -106,46 +95,7 @@
     <EmbeddedResource Include="Localization\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.10.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.2.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.3.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.4.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.5.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.5.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.6.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.6.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.7.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What's New v1.8.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What%27s New v1.9.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Release Notes\What%27s New v1.9.0.md">
+    <EmbeddedResource Include="Release Notes\*.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

@@ -36,8 +36,8 @@ echo ============================================================
 echo   Release zip ready: releases\%ZIP_NAME%
 echo.
 echo   Next steps:
-echo     1. git tag %VERSION%
-echo     2. git push origin %VERSION%
+echo     1. git tag v%VERSION%
+echo     2. git push origin v%VERSION%
 echo     3. Create GitHub Release tagged %VERSION%
 echo     4. Upload: releases\%ZIP_NAME%
 echo ============================================================
