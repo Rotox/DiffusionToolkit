@@ -94,6 +94,23 @@ public class ImageViewModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public string? RefinerModel
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public string? RefinerSwitchAt
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public IReadOnlyList<LoraEntry> Loras
+    {
+        get;
+        set => SetField(ref field, value);
+    }
 
     public string Date
     {
@@ -313,6 +330,12 @@ public class ImageTagView : BaseNotify
         get; 
         set => SetField(ref field, value); 
     }
+}
+
+public class LoraEntry
+{
+    public string Name { get; set; }
+    public string Weight { get; set; }
 }
 
 public class TagFilterView : BaseNotify

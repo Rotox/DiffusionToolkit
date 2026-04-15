@@ -14,6 +14,7 @@
         <converters:SizeConverter x:Key="SizeConverter"></converters:SizeConverter>
         <converters:ZeroConverter x:Key="ZeroConverter"></converters:ZeroConverter>
         <converters:BoolToVisibilityConverter x:Key="boolToVis"></converters:BoolToVisibilityConverter>
+        <converters:NullToVisibilityConverter x:Key="nullToVis"></converters:NullToVisibilityConverter>
     </UserControl.Resources>
     <Grid x:Name="Root" Background="Transparent"
         DataContext="{Binding CurrentImage, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=UserControl}}">
@@ -91,6 +92,69 @@
                                 <TextBox Grid.Column="0" FontSize="14" BorderThickness="0"
                                          IsReadOnly="True" Padding="5" Background="Transparent" TextWrapping="WrapWithOverflow" Text="{Binding ModelName}"/>
                                 <TextBox Grid.Column="1" FontSize="14" BorderThickness="0" IsReadOnly="True" Padding="5" Background="Transparent" Text="{Binding ModelHash}"/>
+                            </Grid>
+                        </local:AccordionControl>
+                        <local:AccordionControl x:Name="RefinerMetadata"
+                                                Margin="0,0,0,5"
+                                                HeaderBackground="#80000000" Header="Refiner"
+                                                Visibility="{Binding RefinerModel, Converter={StaticResource nullToVis}}">
+                            <local:AccordionControl.ButtonAreaContent>
+                                <Grid Background="{x:Null}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="SWITCH AT"/>
+                                </Grid>
+                            </local:AccordionControl.ButtonAreaContent>
+                            <Grid Background="{x:Null}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True" Padding="5" Background="Transparent"
+                                         TextWrapping="WrapWithOverflow" Text="{Binding RefinerModel}"/>
+                                <TextBox Grid.Column="1" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True" Padding="5" Background="Transparent"
+                                         Text="{Binding RefinerSwitchAt}"/>
+                            </Grid>
+                        </local:AccordionControl>
+                        <local:AccordionControl x:Name="LoraMetadata"
+                                                Margin="0,0,0,5"
+                                                HeaderBackground="#80000000" Header="LoRAs"
+                                                Visibility="{Binding Loras, Converter={StaticResource nullToVis}}">
+                            <Grid Background="{x:Null}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Background="{x:Null}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Style="{DynamicResource SmallCaps}" Content="NAME"/>
+                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="WEIGHT"/>
+                                </Grid>
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Loras}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="{x:Null}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="100"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" FontSize="14" BorderThickness="0"
+                                                         IsReadOnly="True" Padding="5" Background="Transparent"
+                                                         TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
+                                                <TextBox Grid.Column="1" FontSize="14" BorderThickness="0"
+                                                         IsReadOnly="True" Padding="5" Background="Transparent"
+                                                         Text="{Binding Weight}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Grid>
                         </local:AccordionControl>
 

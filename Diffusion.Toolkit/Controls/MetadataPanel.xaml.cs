@@ -1,4 +1,6 @@
 ﻿using Diffusion.Common;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Diffusion.Common.Query;
 using Diffusion.Database.Models;
 using Diffusion.Toolkit.Configuration;
@@ -25,7 +27,7 @@ namespace Diffusion.Toolkit.Controls
             new PropertyMetadata(default(ImageEntry), PropertyChangedCallback)
         );
 
-        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is MetadataPanel panel)
             {
@@ -35,8 +37,54 @@ namespace Diffusion.Toolkit.Controls
                     {
                         panel.UpdateFilter();
                     }
+                    if (args.PropertyName == nameof(ImageViewModel.Prompt) ||
+                        args.PropertyName == nameof(ImageViewModel.OtherParameters))
+                    {
+                        ParseLorasAndRefiner(panel.CurrentImage);
+                    }
                 };
                 panel.UpdateFilter();
+                ParseLorasAndRefiner(panel.CurrentImage);
+            }
+        }
+
+        private static void ParseLorasAndRefiner(ImageViewModel image)
+        {
+            if (!string.IsNullOrEmpty(image.Prompt))
+            {
+                var loraMatches = Regex.Matches(image.Prompt, "<lora:([^:>]+):([^>]+)>");
+                var loras = new List<LoraEntry>();
+                foreach (Match m in loraMatches)
+                {
+                    var rawName = m.Groups[1].Value;
+                    var name = System.IO.Path.GetFileName(rawName.Replace((char)47, System.IO.Path.DirectorySeparatorChar));
+                    loras.Add(new LoraEntry { Name = name, Weight = m.Groups[2].Value });
+                }
+                image.Loras = loras.Count > 0 ? loras : null;
+            }
+            else
+            {
+                image.Loras = null;
+            }
+
+            if (!string.IsNullOrEmpty(image.OtherParameters))
+            {
+                var refinerMatch = Regex.Match(image.OtherParameters, "Refiner:\\s*([^\\[\\n]+?)\\s*(?:\\[[^\\]]*\\])?\\s*,\\s*Refiner switch at:\\s*([0-9.]+)");
+                if (refinerMatch.Success)
+                {
+                    image.RefinerModel = refinerMatch.Groups[1].Value.Trim();
+                    image.RefinerSwitchAt = refinerMatch.Groups[2].Value.Trim();
+                }
+                else
+                {
+                    image.RefinerModel = null;
+                    image.RefinerSwitchAt = null;
+                }
+            }
+            else
+            {
+                image.RefinerModel = null;
+                image.RefinerSwitchAt = null;
             }
         }
 
@@ -82,6 +130,8 @@ namespace Diffusion.Toolkit.Controls
             SamplerMetadata.State = state;
             OtherMetadata.State = state;
             ModelMetadata.State = state;
+            RefinerMetadata.State = state;
+            LoraMetadata.State = state;
             PathMetadata.State = state;
             AlbumMetadata.State = state;
             DateMetadata.State = state;
