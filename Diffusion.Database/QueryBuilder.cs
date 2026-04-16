@@ -1,4 +1,4 @@
-﻿using Diffusion.Common;
+using Diffusion.Common;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -576,7 +576,7 @@ public static partial class QueryBuilder
 
         foreach (var token in tokens)
         {
-            conditions.Add(new KeyValuePair<string, object>("(Prompt LIKE ?)", $"%{token.Trim()}%"));
+            conditions.Add(new KeyValuePair<string, object>("(Prompt LIKE ? OR FileName LIKE ?)", new object[] { $"%{token.Trim()}%", $"%{token.Trim()}%" }));
         }
     }
 
