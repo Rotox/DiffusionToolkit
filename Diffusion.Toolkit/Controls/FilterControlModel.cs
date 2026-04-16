@@ -460,6 +460,12 @@ public class FilterControlModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public string CreationDateMode
+    {
+        get;
+        set => SetField(ref field, value);
+    } = "After";
+
     public DateTime? Start
     {
         get;
@@ -472,6 +478,29 @@ public class FilterControlModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public bool UseModifiedDate
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public string ModifiedDateMode
+    {
+        get;
+        set => SetField(ref field, value);
+    } = "After";
+
+    public DateTime? ModifiedDateStart
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public DateTime? ModifiedDateEnd
+    {
+        get;
+        set => SetField(ref field, value);
+    }
     public bool UseHyperNet
     {
         get;
@@ -561,6 +590,7 @@ public class FilterControlModel : BaseNotify
                              UseAestheticScore ||
                              UsePath ||
                              UseCreationDate ||
+                             UseModifiedDate ||
                              UseHyperNet ||
                              UseHyperNetStr ||
                              UseNoMetadata ||
@@ -613,6 +643,11 @@ public class FilterControlModel : BaseNotify
         Path = String.Empty;
         Start = null;
         End = null;
+        CreationDateMode = "After";
+        UseModifiedDate = false;
+        ModifiedDateMode = "After";
+        ModifiedDateStart = null;
+        ModifiedDateEnd = null;
         HyperNet = String.Empty;
         HyperNetStr = 0;
         NoMetadata = false;

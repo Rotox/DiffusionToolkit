@@ -61,9 +61,13 @@ public class Filter
     public string Path { get; set; }
 
     public bool UseCreationDate { get; set; }
+    public string CreationDateMode { get; set; } = "After";
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
-
+    public bool UseModifiedDate { get; set; }
+    public string ModifiedDateMode { get; set; } = "After";
+    public DateTime? ModifiedDateStart { get; set; }
+    public DateTime? ModifiedDateEnd { get; set; }
     public bool UseHyperNet { get; set; }
     public string HyperNet { get; set; }
 
@@ -97,6 +101,7 @@ public class Filter
                             UseAestheticScore ||
                             UsePath ||
                             UseCreationDate ||
+                            UseModifiedDate ||
                             UseHyperNet ||
                             UseHyperNetStr ||
                             UseNoMetadata ||

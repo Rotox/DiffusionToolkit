@@ -15,12 +15,191 @@
        mc:Ignorable="d" 
        d:DesignHeight="720" d:DesignWidth="600">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <converters:IsValueBoolConverter x:Key="isValueBool"></converters:IsValueBoolConverter>
-            <converters:IsStrValueBoolConverter x:Key="isStrValueBool"></converters:IsStrValueBoolConverter>
-            <converters:NotBoolConverter x:Key="notBool"></converters:NotBoolConverter>
-            <converters:InverseBoolToVisibilityCollapsedConverter x:Key="invBoolToVis"></converters:InverseBoolToVisibilityCollapsedConverter>
-        </ResourceDictionary>
+<ResourceDictionary>
+    <converters:IsValueBoolConverter x:Key="isValueBool"></converters:IsValueBoolConverter>
+    <converters:IsStrValueBoolConverter x:Key="isStrValueBool"></converters:IsStrValueBoolConverter>
+    <converters:NotBoolConverter x:Key="notBool"></converters:NotBoolConverter>
+    <converters:InverseBoolToVisibilityCollapsedConverter x:Key="invBoolToVis"></converters:InverseBoolToVisibilityCollapsedConverter>
+    <converters:StringEqualsToVisibilityConverter x:Key="strEqToVis"/>
+    <Style x:Key="CalendarDayButtonStyle" TargetType="{x:Type CalendarDayButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CalendarDayButton}">
+                    <Grid>
+                        <Rectangle x:Name="SelectedBackground" Fill="{DynamicResource FocusedBrush}" Opacity="0" RadiusX="2" RadiusY="2"/>
+                        <Rectangle x:Name="TodayBackground" Fill="{DynamicResource HighlightBrush}" Opacity="0" RadiusX="2" RadiusY="2"/>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextBlock.Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsToday" Value="True">
+                            <Setter TargetName="TodayBackground" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="SelectedBackground" Property="Opacity" Value="0.8"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="SelectedBackground" Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+<Style x:Key="ThemedCalendar" TargetType="{x:Type Calendar}">
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+    <Setter Property="CalendarDayButtonStyle" Value="{StaticResource CalendarDayButtonStyle}"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Calendar}">
+                <StackPanel x:Name="PART_Root" HorizontalAlignment="Center">
+                    <CalendarItem x:Name="PART_CalendarItem"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}">
+                        <CalendarItem.Template>
+                            <ControlTemplate TargetType="{x:Type CalendarItem}">
+                                <ControlTemplate.Resources>
+                                    <DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
+                                        <TextBlock FontWeight="Bold"
+                                                   FontSize="9.5"
+                                                   Foreground="{DynamicResource ForegroundBrush}"
+                                                   HorizontalAlignment="Center"
+                                                   Text="{Binding}"
+                                                   Margin="0,6,0,6"
+                                                   VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </ControlTemplate.Resources>
+                                <Grid x:Name="PART_Root" Background="{DynamicResource PrimaryBrush}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="PART_PreviousButton"
+                                            Grid.Row="0" Grid.Column="0"
+                                            Focusable="False"
+                                            HorizontalAlignment="Left"
+                                            Width="28" Height="20">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Grid Background="Transparent" Cursor="Hand">
+                                                    <Path Margin="14,-6,0,0" Height="10" Width="6"
+                                                          VerticalAlignment="Center" HorizontalAlignment="Left"
+                                                          Stretch="Fill"
+                                                          Data="M288.75,232.25 L288.75,240.625 L283,236.625 z"
+                                                          Fill="{DynamicResource ForegroundBrush}"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button x:Name="PART_HeaderButton"
+                                            Grid.Row="0" Grid.Column="1"
+                                            Focusable="False"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            FontWeight="Bold" FontSize="10.5">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                  Margin="1,4,1,9"
+                                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                                    <TextElement.Foreground>
+                                                        <SolidColorBrush Color="{DynamicResource Foreground}"/>
+                                                    </TextElement.Foreground>
+                                                </ContentPresenter>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button x:Name="PART_NextButton"
+                                            Grid.Row="0" Grid.Column="2"
+                                            Focusable="False"
+                                            HorizontalAlignment="Right"
+                                            Width="28" Height="20">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Grid Background="Transparent" Cursor="Hand">
+                                                    <Path Margin="0,-6,14,0" Height="10" Width="6"
+                                                          VerticalAlignment="Center" HorizontalAlignment="Right"
+                                                          Stretch="Fill"
+                                                          Data="M282.875,231.875 L282.875,240.375 L288.625,236 z"
+                                                          Fill="{DynamicResource ForegroundBrush}"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Grid x:Name="PART_MonthView" Grid.Row="1" Grid.ColumnSpan="3" Visibility="Visible" Margin="6,-1,6,6">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                    </Grid>
+                                    <Grid x:Name="PART_YearView" Grid.Row="1" Grid.ColumnSpan="3" Visibility="Hidden" Margin="6,-3,7,6">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                    </Grid>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Value="Year">
+                                        <DataTrigger.Binding>
+                                            <Binding Path="DisplayMode" RelativeSource="{RelativeSource AncestorType={x:Type Calendar}}"/>
+                                        </DataTrigger.Binding>
+                                        <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden"/>
+                                        <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Value="Decade">
+                                        <DataTrigger.Binding>
+                                            <Binding Path="DisplayMode" RelativeSource="{RelativeSource AncestorType={x:Type Calendar}}"/>
+                                        </DataTrigger.Binding>
+                                        <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden"/>
+                                        <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </CalendarItem.Template>
+                    </CalendarItem>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+</ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="MainGrid" Margin="0,0,0,10" DataContext="{Binding Filter, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
         <TabControl Background="{x:Null}">
@@ -239,12 +418,44 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <CheckBox IsChecked="{Binding UseCreationDate}" VerticalContentAlignment="Center" Content="{lex:Loc Filter.Metadata.CreatedDate}"></CheckBox>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <DatePicker VerticalContentAlignment="Center" SelectedDate="{Binding Start}" ></DatePicker>
-                                <Label>to</Label>
-                                <DatePicker VerticalContentAlignment="Center" SelectedDate="{Binding End}" ></DatePicker>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <ComboBox Width="80" VerticalContentAlignment="Center" SelectedValue="{Binding CreationDateMode, Mode=TwoWay}" SelectedValuePath="Content">
+                                        <ComboBoxItem>Before</ComboBoxItem>
+                                        <ComboBoxItem>After</ComboBoxItem>
+                                        <ComboBoxItem>On</ComboBoxItem>
+                                        <ComboBoxItem>Between</ComboBoxItem>
+                                    </ComboBox>
+                                    <DatePicker Margin="5,0,0,0" VerticalContentAlignment="Center" SelectedDate="{Binding Start}" CalendarStyle="{StaticResource ThemedCalendar}"></DatePicker>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding CreationDateMode, Converter={StaticResource strEqToVis}, ConverterParameter=Between}">
+                                    <Label>to</Label>
+                                    <DatePicker VerticalContentAlignment="Center" SelectedDate="{Binding End}" CalendarStyle="{StaticResource ThemedCalendar}"></DatePicker>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
+                        <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox IsChecked="{Binding UseModifiedDate}" VerticalContentAlignment="Center" Content="Modified Date"></CheckBox>
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox Width="80" VerticalContentAlignment="Center" SelectedValue="{Binding ModifiedDateMode, Mode=TwoWay}" SelectedValuePath="Content">
+                                    <ComboBoxItem>Before</ComboBoxItem>
+                                    <ComboBoxItem>After</ComboBoxItem>
+                                    <ComboBoxItem>On</ComboBoxItem>
+                                    <ComboBoxItem>Between</ComboBoxItem>
+                                </ComboBox>
+                                <DatePicker Margin="5,0,0,0" VerticalContentAlignment="Center" SelectedDate="{Binding ModifiedDateStart}" CalendarStyle="{StaticResource ThemedCalendar}"></DatePicker>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding ModifiedDateMode, Converter={StaticResource strEqToVis}, ConverterParameter=Between}">
+                                <Label>to</Label>
+                                <DatePicker VerticalContentAlignment="Center" SelectedDate="{Binding ModifiedDateEnd}" CalendarStyle="{StaticResource ThemedCalendar}"></DatePicker>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
                         <Grid Margin="0,0,0,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="130"/>

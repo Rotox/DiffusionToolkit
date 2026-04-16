@@ -40,6 +40,7 @@ namespace Diffusion.Database
             FilterFolder(filter, conditions, joins);
             FilterPath(filter, conditions);
             FilterDate(filter, conditions);
+            FilterModifiedDate(filter, conditions);
             FilterSeed(filter, conditions);
             FilterSteps(filter, conditions);
             FilterSampler(filter, conditions);
@@ -636,10 +637,43 @@ namespace Diffusion.Database
         {
             if (filter.UseCreationDate)
             {
-                var q = "(CreatedDate BETWEEN ? AND ?)";
+                BuildDateCondition("CreatedDate", filter.CreationDateMode, filter.Start, filter.End, conditions);
+            }
+        }
 
-                var start = filter.Start;
-                var end = filter.End;
+        private static void FilterModifiedDate(Filter filter, List<KeyValuePair<string, object>> conditions)
+        {
+            if (filter.UseModifiedDate)
+            {
+                BuildDateCondition("ModifiedDate", filter.ModifiedDateMode, filter.ModifiedDateStart, filter.ModifiedDateEnd, conditions);
+            }
+        }
+
+        private static void BuildDateCondition(string column, string mode, DateTime? date1, DateTime? date2, List<KeyValuePair<string, object>> conditions)
+        {
+            var start = date1 ?? DateTime.Now;
+
+            switch (mode?.ToLower())
+            {
+                case "before":
+                    conditions.Add(new KeyValuePair<string, object>($"({column} < ?)", start.Date));
+                    break;
+                case "on":
+                    var endOfDay = start.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
+                    conditions.Add(new KeyValuePair<string, object>($"({column} BETWEEN ? AND ?)", new object[] { start.Date, endOfDay }));
+                    break;
+                case "between":
+                    var end = date2 ?? DateTime.Now;
+                    if (start > end) (start, end) = (end, start);
+                    var betweenEnd = end.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
+                    conditions.Add(new KeyValuePair<string, object>($"({column} BETWEEN ? AND ?)", new object[] { start.Date, betweenEnd }));
+                    break;
+                case "after":
+                default:
+                    conditions.Add(new KeyValuePair<string, object>($"({column} >= ?)", start.Date));
+                    break;
+            }
+        }
 
                 //if (!string.IsNullOrEmpty(prep1))
                 //{
@@ -692,30 +726,6 @@ namespace Diffusion.Database
                 //            break;
                 //    }
                 //}
-                if (!start.HasValue)
-                {
-                    start = DateTime.Now;
-                }
-
-                if (end.HasValue)
-                {
-                    end = end.Value.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
-                }
-                else
-                {
-                    end = DateTime.Now;
-                }
-
-
-                if (start > end)
-                {
-                    (start, end) = (end, start);
-                }
-
-                conditions.Add(new KeyValuePair<string, object>(q, new object[] { start, end }));
-            }
-        }
-
         //private static DateTime FilterDate(string text)
         //{
         //    switch (text.ToLower())

@@ -450,7 +450,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style TargetType="{x:Type DatePicker}">
         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
         <Setter Property="IsTodayHighlighted" Value="True"/>

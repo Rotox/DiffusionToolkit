@@ -68,8 +68,14 @@ public static class SearchControlModelExtensions
         model.Path = filter.Path;
 
         model.UseCreationDate = filter.UseCreationDate;
+        model.CreationDateMode = filter.CreationDateMode ?? "After";
         model.Start = filter.Start;
         model.End = filter.End;
+
+        model.UseModifiedDate = filter.UseModifiedDate;
+        model.ModifiedDateMode = filter.ModifiedDateMode ?? "After";
+        model.ModifiedDateStart = filter.ModifiedDateStart;
+        model.ModifiedDateEnd = filter.ModifiedDateEnd;
 
         model.UseHyperNet = filter.UseHyperNet;
         model.HyperNet = filter.HyperNet;
@@ -162,8 +168,14 @@ public static class SearchControlModelExtensions
         filter.Path = model.Path;
 
         filter.UseCreationDate = model.UseCreationDate;
+        filter.CreationDateMode = model.CreationDateMode ?? "After";
         filter.Start = model.Start;
         filter.End = model.End;
+
+        filter.UseModifiedDate = model.UseModifiedDate;
+        filter.ModifiedDateMode = model.ModifiedDateMode ?? "After";
+        filter.ModifiedDateStart = model.ModifiedDateStart;
+        filter.ModifiedDateEnd = model.ModifiedDateEnd;
 
         filter.UseHyperNet = model.UseHyperNet;
         filter.HyperNet = model.HyperNet;
