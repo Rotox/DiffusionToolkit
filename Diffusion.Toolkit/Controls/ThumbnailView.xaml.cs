@@ -80,6 +80,7 @@ namespace Diffusion.Toolkit.Controls
 
             Model.RescanFolderCommand = new AsyncCommand<object>(o => RescanFolder(true));
             Model.ScanFolderCommand = new AsyncCommand<object>(o => RescanFolder(false));
+            Model.RenameFileCommand = new AsyncCommand<object>(o => RenameFile());
 
             Model.NextPage = new RelayCommand<object>((o) => GoNextPage(null));
             Model.PrevPage = new RelayCommand<object>((o) => GoPrevPage(null));
@@ -100,7 +101,55 @@ namespace Diffusion.Toolkit.Controls
             //GotFocus += ThumbnailView_GotFocus;
             Init();
         }
+    private async Task RenameFile()
+    {
+        var imageEntry = Model.SelectedImageEntry;
+        if (imageEntry == null || imageEntry.EntryType != EntryType.File) return;
 
+        var oldPath = imageEntry.Path;
+        var extension = Path.GetExtension(oldPath);
+        var oldNameWithoutExt = Path.GetFileNameWithoutExtension(oldPath);
+        var directory = Path.GetDirectoryName(oldPath);
+
+        var (result, newNameWithoutExt) = await ServiceLocator.MessageService.ShowInput(
+            "Enter a new name for the file", "Rename file", oldNameWithoutExt);
+
+        if (result != PopupResult.OK) return;
+
+        if (string.IsNullOrWhiteSpace(newNameWithoutExt))
+        {
+            await ServiceLocator.MessageService.Show("File name cannot be empty.", "Rename file");
+            return;
+        }
+
+        if (!FileUtility.IsValidFilename(newNameWithoutExt))
+        {
+            await ServiceLocator.MessageService.Show("The file name contains invalid characters.", "Rename file");
+            return;
+        }
+
+        var newFileName = newNameWithoutExt + extension;
+        var newPath = Path.Combine(directory, newFileName);
+
+        if (!oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase) && File.Exists(newPath))
+        {
+            await ServiceLocator.MessageService.Show($"A file named '{newFileName}' already exists.", "Rename file");
+            return;
+        }
+
+        try
+        {
+            File.Move(oldPath, newPath);
+            _dataStore.UpdateImageFilename(imageEntry.Id, newPath, newFileName);
+            imageEntry.Path = newPath;
+            imageEntry.Name = newFileName;
+            ServiceLocator.ToastService.Toast($"Renamed to {newFileName}", "");
+        }
+        catch (Exception ex)
+        {
+            await ServiceLocator.MessageService.Show($"Rename failed: {ex.Message}", "Rename file");
+        }
+}
         private async Task RescanFolder(bool fullScan)
         {
             if (await ServiceLocator.ProgressService.TryStartTask())

@@ -570,6 +570,7 @@
                         <MenuItem Header="{lex:Loc Thumbnail.ContextMenu.CopyParameter.All}" Command="{Binding CopyParametersCommand}"/>
                     </MenuItem>
                     <MenuItem Style="{StaticResource FileMenuItem}" Header="{lex:Loc Thumbnail.ContextMenu.CopyPath}" Command="{Binding CopyPathCommand}" />
+                    <MenuItem Style="{StaticResource FileMenuItem}" Header="Rename" Command="{Binding RenameFileCommand}" />
                     <Separator Style="{StaticResource FileSeparator}"/>
                     <MenuItem Style="{StaticResource FileMenuItem}" Header="{lex:Loc Thumbnail.ContextMenu.Copy}" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}" />
                     <!--<MenuItem IsEnabled="{Binding IsImage}" Header="{lex:Loc Thumbnail.ContextMenu.Move}" Command="{Binding MoveCommand}"/>-->

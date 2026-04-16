@@ -370,6 +370,7 @@ public class ThumbnailViewModel : BaseNotify
         set => SetField(ref field, value);
     }
 
-    public ICommand RescanFolderCommand { get; set; }
-    public ICommand ScanFolderCommand { get; set; }
+public ICommand RescanFolderCommand { get; set; }
+public ICommand ScanFolderCommand { get; set; }
+public ICommand RenameFileCommand { get; set; }
 }
