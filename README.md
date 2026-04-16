@@ -3,17 +3,17 @@
   
 Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated images. It aims to help you organize, search and sort your ever-growing collection.
 
-# Enhancements:
+# Enhancements
 
+- **Model name display:** Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
 
+- **Date filters:** Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
 
-- **Model name display:** Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. 
+- **Tag exclude filter:** A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
 
-- **Exclude filter for tags:** Added checkbox to sidebar tags for negative tag filtering. Filtering for images tagged not tagged with a tag or with one tag but not another (e.g. show reviewed but not published).
+- **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
 
-- **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point. 
-
-- **LoRA display in metadata panel:** The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table. 
+- **LoRA display in metadata panel:** The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
 
 # Usage
 
