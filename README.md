@@ -3,6 +3,12 @@
   
 Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated images. It aims to help you organize, search and sort your ever-growing collection.
 
+> This is a personal fork of [RupertAvery/DiffusionToolkit](https://github.com/RupertAvery/DiffusionToolkit). Full credit for the original application, architecture, and vision goes to the original author.
+> Made these modifications to scratch my own itch. If the enhancements here match what you were looking for, you're welcome to it. Changes from the base version are documented in the sections below.
+
+If you find Diffusion Toolkit valuable, please consider supporting the original author — visit [RupertAvery's GitHub](https://github.com/RupertAvery/DiffusionToolkit) to tip or donate.
+
+
 # Enhancements
 
 - **Model name display:** Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
@@ -14,6 +20,7 @@ Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated image
 - **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
 
 - **LoRA display in metadata panel:** The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
+
 
 # Usage
 
@@ -178,22 +185,7 @@ A folder named `build` will be created, containing all the necessary files.
 You can even use it on images without metadata and still use the other features such as rating and albums!
 
   
-
-# Donate
-
-  
-
-<a href="https://www.buymeacoffee.com/rupertavery" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
-  
-
-or
-
-  
-
-<a href="https://www.paypal.me/rupertavery" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate"></a>
-
-  
+ 
 
 # Screenshots
 
