@@ -2,7 +2,7 @@
 setlocal
 
 :: ── Set version here before running ──────────────────────────
-set VERSION=1.10.2
+set VERSION=1.10.5
 
 :: ─────────────────────────────────────────────────────────────
 
