@@ -1831,15 +1831,13 @@ namespace Diffusion.Toolkit.Pages
             var imageData = ServiceLocator.DataStore.GetImage(id);
             var image = _model.Images.FirstOrDefault(i => i.Id == id);
 
-            if (image != null)
-            {
+            if (imageData == null || image == null) return;
+
                 image.NSFW = imageData.NSFW;
                 image.Favorite = imageData.Favorite;
                 image.Rating = imageData.Rating;
                 image.ForDeletion = imageData.ForDeletion;
-            }
         }
-
         private void PreviewPane_OnDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

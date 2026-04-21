@@ -760,10 +760,10 @@ public class Metadata
 
     public static (int width, int height) GetImageSize(Stream stream)
     {
-        ImageInfo info = Image.Identify(stream);
+        ImageInfo? info = Image.Identify(stream);
+        if (info == null) return (0, 0);
         return (info.Width, info.Height);
     }
-
     private static FileParameters DetectAndReadMetaType(string parameters)
     {
         if (IsStableDiffusion(parameters))
