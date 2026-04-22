@@ -737,15 +737,18 @@ namespace Diffusion.Toolkit.Pages
         public void UpdateResults()
         {
             var text = GetLocalizedText("Search.Results");
-            var selectedText = GetLocalizedText("Search.Selection");
 
             var (fsize, formattedSize) = ToIECPrefix(_model.Size);
             text = text.Replace("{count}", $"{_model.Count:n0}")
                 .Replace("{size}", $"{formattedSize}");
 
-            if (ServiceLocator.MainModel.SelectedImages != null && ServiceLocator.MainModel.SelectedImages.Count > 1)
+            if (ServiceLocator.MainModel.SelectedImages != null && ServiceLocator.MainModel.SelectedImages.Count > 0)
             {
-                text = text + " | " + selectedText.Replace("{count}", $"{ServiceLocator.MainModel.SelectedImages.Count:n0}");
+                var selCount = ServiceLocator.MainModel.SelectedImages.Count;
+                var selSize = ServiceLocator.MainModel.SelectedImages.Sum(e => e.Size);
+                var (_, selFormattedSize) = ToIECPrefix(selSize);
+                var selLabel = selCount == 1 ? "item" : "items";
+                text = text + " | " + $"{selCount:n0} {selLabel} selected ({selFormattedSize})";
             }
 
             _model.Results = text;
@@ -1393,6 +1396,7 @@ namespace Diffusion.Toolkit.Pages
                     Dispatcher = Dispatcher,
                     HasError = file.HasError,
                     Type = file.Type,
+                    Size = file.FileSize,
                 };
 
                 images.Add(imageEntry);

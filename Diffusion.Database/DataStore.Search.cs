@@ -365,7 +365,7 @@ namespace Diffusion.Database
                       "CustomTags, Rating, Favorite, ForDeletion, NSFW, " +
                       "AestheticScore, HyperNetwork, HyperNetworkStrength, ClipSkip, ENSD, FileSize, NoMetadata, HasError, Type";
 
-        const string columns = "Favorite, ForDeletion, Rating, AestheticScore, CreatedDate, NSFW, HasError, Type";
+        const string columns = "Favorite, ForDeletion, Rating, AestheticScore, CreatedDate, NSFW, HasError, Type, FileSize";
 
         public IEnumerable<ImageView> SearchEx(QueryOptions options, Sorting sorting, Paging? paging = null)
         {

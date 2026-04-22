@@ -1,4 +1,4 @@
-﻿using Diffusion.Common;
+using Diffusion.Common;
 using SQLite;
 
 namespace Diffusion.Database.Models;
@@ -81,4 +81,5 @@ public class ImageView
     public int  AlbumCount { get; set; }
     public bool HasError { get; set; }
     public ImageType Type { get; set; }
+    public long FileSize { get; set; }
 }
