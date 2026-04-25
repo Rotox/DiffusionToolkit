@@ -1,4 +1,4 @@
-﻿using Diffusion.ComfyUI;
+using Diffusion.ComfyUI;
 using Diffusion.Common;
 
 namespace Diffusion.IO;
@@ -10,6 +10,7 @@ public class FileParameters
     public string? NegativePrompt { get; set; }
     public int Steps { get; set; }
     public string? Sampler { get; set; }
+    public string? Scheduler { get; set; }
     public decimal CFGScale { get; set; }
     public long Seed { get; set; }
     public int Width { get; set; }

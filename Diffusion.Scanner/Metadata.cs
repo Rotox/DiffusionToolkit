@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Directory = MetadataExtractor.Directory;
@@ -1222,6 +1222,9 @@ public class Metadata
                             case "Sampler":
                                 fileParameters.Sampler = kvp[1].Trim();
                                 break;
+                            case "Schedule type":
+                                fileParameters.Scheduler = kvp[1].Trim();
+                                break;
                             case "Guidance Scale":
                                 fileParameters.CFGScale = decimal.Parse(kvp[1].Trim(), CultureInfo.InvariantCulture);
                                 break;
@@ -1539,8 +1542,11 @@ public class Metadata
                                     fileParameters.Steps = int.Parse(kvp[1].Trim(), CultureInfo.InvariantCulture);
                                     break;
                                 case "Sampler":
-                                    fileParameters.Sampler = kvp[1].Trim();
-                                    break;
+                                fileParameters.Sampler = kvp[1].Trim();
+                                break;
+                            case "Schedule type":
+                                fileParameters.Scheduler = kvp[1].Trim();
+                                break;
                                 case "CFG scale":
                                     fileParameters.CFGScale = decimal.Parse(kvp[1].Trim(), CultureInfo.InvariantCulture);
                                     break;

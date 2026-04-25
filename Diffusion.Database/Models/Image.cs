@@ -20,6 +20,7 @@ public class Image
     public string? NegativePrompt { get; set; }
     public int Steps { get; set; }
     public string? Sampler { get; set; }
+    public string? Scheduler { get; set; }
 
     public decimal CFGScale { get; set; }
     public long Seed { get; set; }

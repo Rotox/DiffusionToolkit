@@ -1,4 +1,4 @@
-﻿using Diffusion.Database.Models;
+using Diffusion.Database.Models;
 using Diffusion.Toolkit.Classes;
 using Diffusion.Toolkit.Controls;
 using System.Collections.Generic;
@@ -250,6 +250,12 @@ public class ImageViewModel : BaseNotify
         get;
         set => SetField(ref field, value);
     }
+    public string? Scheduler
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+    public string? SamplerDisplay => string.IsNullOrEmpty(Scheduler) ? Sampler : $"{Sampler} / {Scheduler}";
 
     public int Steps
     {

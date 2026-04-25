@@ -185,7 +185,7 @@
   "Metadata.CFGScale": "CFG",
   "Metadata.Steps": "SCHRITTE",
   "Metadata.Size": "GRÖSSE",
-  "Metadata.Sampler": "SAMPLER",
+  "Metadata.Sampler": "SAMPLER / SCHEDULER",
   "Metadata.Others": "ANDERE",
   "Metadata.ModelName": "MODELLNAME",
   "Metadata.ModelHash": "MODELLHASH",

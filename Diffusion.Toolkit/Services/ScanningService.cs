@@ -1,4 +1,4 @@
-﻿using Diffusion.ComfyUI;
+using Diffusion.ComfyUI;
 using Diffusion.Common;
 using Diffusion.Database;
 using Diffusion.Database.Models;

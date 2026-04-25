@@ -1,4 +1,4 @@
-﻿using Diffusion.Civitai.Models;
+using Diffusion.Civitai.Models;
 using Diffusion.Common;
 using Diffusion.Common.Query;
 using Diffusion.Database;
@@ -1136,6 +1136,7 @@ namespace Diffusion.Toolkit.Pages
                     imageViewModel.CFGScale = parameters.CFGScale;
                     imageViewModel.Steps = parameters.Steps;
                     imageViewModel.Sampler = parameters.Sampler;
+                    imageViewModel.Scheduler = parameters.Scheduler;
 
                     imageViewModel.Width = parameters.Width;
                     imageViewModel.Height = parameters.Height;
