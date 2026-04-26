@@ -3,8 +3,8 @@
   
 Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated images. It aims to help you organize, search and sort your ever-growing collection.
 
-> This is a personal fork of [RupertAvery/DiffusionToolkit](https://github.com/RupertAvery/DiffusionToolkit). Full credit for the original application, architecture, and vision goes to the original author.
-> Made these modifications to scratch my own itch. If the enhancements here match what you were looking for, you're welcome to it. Changes from the base version are documented in the sections below.
+> This is a personal fork of [RupertAvery/DiffusionToolkit](https://github.com/RupertAvery/DiffusionToolkit). Full credit for the application, architecture, and vision goes to the original author
+> These enhancements are personal quality of life improvements for me. If they appeal to you as well then you can download it using the link in the Installation section below. The in-app updater will pull updates from this fork. Changes from the base version are documented below.
 
 If you find Diffusion Toolkit valuable, please consider supporting the original author — visit [RupertAvery's GitHub](https://github.com/RupertAvery/DiffusionToolkit) to tip or donate.
 
@@ -16,6 +16,8 @@ If you find Diffusion Toolkit valuable, please consider supporting the original 
 - **Date filters:** Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
 
 - **Tag exclude filter:** A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
+
+- **Rename images from the context menu:** Right-clicking any image in the thumbnail view now shows a Rename option. Enter a new name in the dialog and the file extension is handled automatically. The file is renamed on disk and updated in the library in one step.
 
 - **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
 
