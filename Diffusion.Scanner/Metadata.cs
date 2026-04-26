@@ -1559,10 +1559,16 @@ public class Metadata
                                     fileParameters.Height = int.Parse(size[1].Trim(), CultureInfo.InvariantCulture);
                                     break;
                                 case "Model hash":
-                                    fileParameters.ModelHash = kvp[1].Trim();
+                                    if (string.IsNullOrEmpty(fileParameters.ModelHash))
+                                    {
+                                        fileParameters.ModelHash = kvp[1].Trim();
+                                    }
                                     break;
                                 case "Model":
-                                    fileParameters.Model = kvp[1].Trim();
+                                    if (string.IsNullOrEmpty(fileParameters.Model))
+                                    {
+                                        fileParameters.Model = kvp[1].Trim();
+                                    }
                                     break;
                                 case "Batch size":
                                     fileParameters.BatchSize = int.Parse(kvp[1].Trim(), CultureInfo.InvariantCulture);
