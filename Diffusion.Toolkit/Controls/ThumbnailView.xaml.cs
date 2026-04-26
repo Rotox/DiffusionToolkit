@@ -112,9 +112,13 @@ namespace Diffusion.Toolkit.Controls
         var directory = Path.GetDirectoryName(oldPath);
 
         var (result, newNameWithoutExt) = await ServiceLocator.MessageService.ShowInput(
-            "Enter a new name for the file", "Rename file", oldNameWithoutExt);
+            "Enter a new name without the file extension", "Rename file", oldNameWithoutExt);
 
         if (result != PopupResult.OK) return;
+
+        // Strip extension if user included it
+        if (newNameWithoutExt.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+            newNameWithoutExt = newNameWithoutExt[..^extension.Length];      
 
         if (string.IsNullOrWhiteSpace(newNameWithoutExt))
         {
