@@ -224,9 +224,9 @@ namespace Diffusion.Toolkit
 
             if (window.DialogResult is true)
             {
-                int removed = await Task.Run(() =>
+                var removedPaths = await Task.Run(() =>
                 {
-                    int count = 0;
+                    var paths = new List<string>();
 
                     foreach (var rootItem in window.Model.ImagePaths.Where(p => p.IsSelected))
                     {
@@ -246,18 +246,35 @@ namespace Diffusion.Toolkit
                         foreach (var folder in unavailable.Where(f => !unavailableIds.Contains(f.ParentId)))
                         {
                             _dataStore.RemoveFolder(folder.Id);
-                            count++;
+                            paths.Add(folder.Path);
                         }
                     }
 
-                    return count;
+                    return paths;
                 });
 
-                if (removed > 0)
+                if (removedPaths.Count > 0)
                 {
+                    // UpdateFolder2 only calls itself recursively on folders that exist on disk, so
+                    // folders removed from the DB while absent from disk are never visited and their
+                    // IsScanned flag is never cleared.  The removal condition in UpdateFolder2 is:
+                    //   child.ForRemoval || (!Directory.Exists && !child.IsScanned)
+                    // Setting ForRemoval = true here bypasses the stale IsScanned check and ensures
+                    // LoadFolders() removes the nodes from the visual tree, matching the pattern used
+                    // by FolderService.ShowRemoveFolderDialog.
+                    foreach (var path in removedPaths)
+                    {
+                        var visualFolder = ServiceLocator.MainModel.Folders
+                            .FirstOrDefault(f => f.Path.Equals(path, StringComparison.OrdinalIgnoreCase));
+                        if (visualFolder != null)
+                        {
+                            visualFolder.ForRemoval = true;
+                        }
+                    }
+
                     await ServiceLocator.FolderService.LoadFolders();
                     ServiceLocator.SearchService.ExecuteSearch();
-                    ServiceLocator.ToastService.Toast($"{removed} folder(s) removed", "");
+                    ServiceLocator.ToastService.Toast($"{removedPaths.Count} folder(s) removed", "");
                 }
             }
         }
