@@ -596,6 +596,12 @@ public class MainModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public ICommand RemoveUnavailableFoldersCommand
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public ICommand UnavailableFilesCommand
     {
         get;

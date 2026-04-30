@@ -427,6 +427,7 @@
                     <MenuItem Header="{lex:Loc Menu.Tools.Folders.FixMissingImages}" Command="{Binding FixFoldersCommand}"/>
                     <MenuItem Header="{lex:Loc Menu.Tools.Folders.RemoveExcludedImages}" Command="{Binding RemoveExcludedImagesCommand}"/>
                     <MenuItem Header="{lex:Loc Menu.Tools.Folders.CleanRemovedFolders}" Command="{Binding CleanRemovedFoldersCommand}"/>
+                    <MenuItem Header="{lex:Loc Menu.Tools.Folders.RemoveUnavailableFolders}" Command="{Binding RemoveUnavailableFoldersCommand}"/>
                 </MenuItem>
                 <MenuItem Header="{lex:Loc Menu.Tools.Tags}">
                     <MenuItem Header="{lex:Loc Menu.Tools.Tags.Import}" Command="{Binding ImportTagsCommand}"/>

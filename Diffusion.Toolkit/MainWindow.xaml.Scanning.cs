@@ -216,6 +216,52 @@ namespace Diffusion.Toolkit
             });
         }
 
+        private async Task RemoveUnavailableFolders(object o)
+        {
+            var window = new RemoveUnavailableFoldersWindow();
+            window.Owner = this;
+            window.ShowDialog();
+
+            if (window.DialogResult is true)
+            {
+                int removed = await Task.Run(() =>
+                {
+                    int count = 0;
+
+                    foreach (var rootItem in window.Model.ImagePaths.Where(p => p.IsSelected))
+                    {
+                        var rootFolder = _dataStore.GetFolder(rootItem.Path);
+                        if (rootFolder == null) continue;
+
+                        var descendants = _dataStore.GetDescendants(rootFolder.Id)
+                            .Where(f => f.Id != rootFolder.Id)
+                            .ToList();
+
+                        var unavailable = descendants
+                            .Where(f => !Directory.Exists(f.Path))
+                            .ToList();
+
+                        var unavailableIds = unavailable.Select(f => f.Id).ToHashSet();
+
+                        foreach (var folder in unavailable.Where(f => !unavailableIds.Contains(f.ParentId)))
+                        {
+                            _dataStore.RemoveFolder(folder.Id);
+                            count++;
+                        }
+                    }
+
+                    return count;
+                });
+
+                if (removed > 0)
+                {
+                    await ServiceLocator.FolderService.LoadFolders();
+                    ServiceLocator.SearchService.ExecuteSearch();
+                    ServiceLocator.ToastService.Toast($"{removed} folder(s) removed", "");
+                }
+            }
+        }
+
         private void SortAlbums()
         {
             var window = new AlbumSortWindow(_dataStore, _settings);

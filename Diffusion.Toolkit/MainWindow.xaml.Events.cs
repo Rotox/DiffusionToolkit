@@ -85,6 +85,7 @@ namespace Diffusion.Toolkit
             _model.FixFoldersCommand = new RelayCommand<object>((o) => FixFolders());
             _model.RemoveExcludedImagesCommand = new RelayCommand<object>((o) => CleanExcludedPaths());
             _model.CleanRemovedFoldersCommand = new AsyncCommand<object>(CleanRemovedFolders);
+            _model.RemoveUnavailableFoldersCommand = new AsyncCommand<object>(RemoveUnavailableFolders);
 
             _model.UnavailableFilesCommand = new AsyncCommand<object>(UnavailableFiles);
 
