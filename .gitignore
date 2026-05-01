@@ -36,3 +36,6 @@ build-self-contained
 .vscode
 /Diffusion.Toolkit/Tools/*.json
 .claude/ 
+.claude/
+CLAUDE.md
+publish-release.cmd

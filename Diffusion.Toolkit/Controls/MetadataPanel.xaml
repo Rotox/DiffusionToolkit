@@ -191,12 +191,30 @@
                             </Grid>
                         </local:AccordionControl>
 
-                        <local:AccordionControl x:Name="SamplerMetadata" 
+                        <local:AccordionControl x:Name="SamplerMetadata"
                                                    Margin="0,0,0,5"
                                                    State="{Binding MetadataSection.SamplerState, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=UserControl}, Mode=TwoWay}"  HeaderBackground="#80000000" Header="{lex:Loc Metadata.Sampler}">
-                            <TextBox Background="#00000000" FontSize="14" BorderThickness="0"
-                                     IsReadOnly="True"
-                                     Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding SamplerDisplay, Mode=OneWay}"/>
+                            <local:AccordionControl.ButtonAreaContent>
+                                <Grid Background="{x:Null}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="150"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="{lex:Loc Metadata.Scheduler}"/>
+                                </Grid>
+                            </local:AccordionControl.ButtonAreaContent>
+                            <Grid Background="{x:Null}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="150"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Background="#00000000" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True"
+                                         Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Sampler}"/>
+                                <TextBox Grid.Column="1" Background="#00000000" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True"
+                                         Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Scheduler}"/>
+                            </Grid>
                         </local:AccordionControl>
 
                         <local:AccordionControl x:Name="OtherMetadata" 

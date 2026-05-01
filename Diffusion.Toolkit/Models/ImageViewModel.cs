@@ -255,8 +255,6 @@ public class ImageViewModel : BaseNotify
         get;
         set => SetField(ref field, value);
     }
-    public string? SamplerDisplay => string.IsNullOrEmpty(Scheduler) ? Sampler : $"{Sampler} / {Scheduler}";
-
     public int Steps
     {
         get;
