@@ -4,7 +4,7 @@
 Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated images. It aims to help you organize, search and sort your ever-growing collection.
 
 > This is a personal fork of [RupertAvery/DiffusionToolkit](https://github.com/RupertAvery/DiffusionToolkit). Full credit for the application, architecture, and vision goes to the original author
-> These enhancements are personal quality of life improvements for me. If they appeal to you as well then you can download it using the link in the Installation section below. The in-app updater will pull updates from this fork. Changes from the base version are documented below.
+> These enhancements are some quality of life improvements I found helpful for my workflows. If they appeal to you as well then you can download it using the link in the Installation section below. The in-app updater will pull updates from this fork. Changes from the base version are documented below.
 
 If you find Diffusion Toolkit valuable, please consider supporting the original author — visit [RupertAvery's GitHub](https://github.com/RupertAvery/DiffusionToolkit) to tip or donate.
 
@@ -17,11 +17,20 @@ If you find Diffusion Toolkit valuable, please consider supporting the original 
 
 - **Tag exclude filter:** A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
 
+- **Filename search:** Search now matches against filenames in addition to metadata fields, so images can be found by their filename even when metadata is absent or incomplete.
+
 - **Rename images from the context menu:** Right-clicking any image in the thumbnail view now shows a Rename option. Enter a new name in the dialog and the file extension is handled automatically. The file is renamed on disk and updated in the library in one step.
 
 - **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
 
 - **LoRA display in metadata panel:** The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
+
+- **Selected file size in status bar:** When one or more images are selected, the status bar shows the file size of the selection alongside the result count. A single selected image shows its own size; multiple selected images show the combined total.
+
+- **Scheduler display in metadata panel:** The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name under a combined SAMPLER / SCHEDULER header. Images without scheduler metadata are unaffected.
+
+- **Remove Unavailable Folders:** Folders deleted outside of Diffusion Toolkit can be cleaned up via Tools → Folders → Remove Unavailable Folders. The existing Clean Removed Folders option has been renamed to Clean Orphaned Images to better reflect what it does.
+
 
 
 # Usage
