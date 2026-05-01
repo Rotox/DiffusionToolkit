@@ -228,13 +228,20 @@ namespace Diffusion.Toolkit
                 {
                     var paths = new List<string>();
 
+                    // GetDescendants uses the ParentId chain so folders with a broken
+                    // ParentId (e.g. pointing to a deleted folder, or ParentId=0) are
+                    // never reached even when their path is under the root. Use a full
+                    // table scan filtered by path prefix so every tracked subfolder is
+                    // checked against the filesystem regardless of its DB parentage.
+                    var allFolders = _dataStore.GetFolders().ToList();
+
                     foreach (var rootItem in window.Model.ImagePaths.Where(p => p.IsSelected))
                     {
-                        var rootFolder = _dataStore.GetFolder(rootItem.Path);
-                        if (rootFolder == null) continue;
+                        var rootPath = rootItem.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        var prefix = rootPath + Path.DirectorySeparatorChar;
 
-                        var descendants = _dataStore.GetDescendants(rootFolder.Id)
-                            .Where(f => f.Id != rootFolder.Id)
+                        var descendants = allFolders
+                            .Where(f => f.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                             .ToList();
 
                         var unavailable = descendants
