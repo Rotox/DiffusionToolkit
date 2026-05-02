@@ -27,7 +27,7 @@ If you find Diffusion Toolkit valuable, please consider supporting the original 
 
 - **Selected file size in status bar:** When one or more images are selected, the status bar shows the file size of the selection alongside the result count. A single selected image shows its own size; multiple selected images show the combined total.
 
-- **Scheduler display in metadata panel:** The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name under a combined SAMPLER / SCHEDULER header. Images without scheduler metadata are unaffected.
+- **Scheduler display in metadata panel:** The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name. Images without scheduler metadata are unaffected.
 
 - **Remove Unavailable Folders:** Folders deleted outside of Diffusion Toolkit can be cleaned up via Tools → Folders → Remove Unavailable Folders. The existing Clean Removed Folders option has been renamed to Clean Orphaned Images to better reflect what it does.
 
