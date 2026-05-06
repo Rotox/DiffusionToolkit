@@ -249,7 +249,7 @@ namespace Diffusion.Toolkit.Services
         {
             var folders = ServiceLocator.DataStore.GetFoldersView().ToList();
 
-            var lookup = folders.ToDictionary(d => d.Path);
+            var lookup = folders.ToDictionary(d => d.Path.ToLower());
 
             var comparer = new PathComparer();
 
@@ -509,8 +509,12 @@ namespace Diffusion.Toolkit.Services
             do
             {
                 currentIndex++;
+                if (currentIndex >= ServiceLocator.MainModel.Folders.Count)
+                {
+                    yield break;
+                }
                 currentFolder = ServiceLocator.MainModel.Folders[currentIndex];
-                if (currentFolder.Depth <= parentDepth || currentIndex > ServiceLocator.MainModel.Folders.Count - 1)
+                if (currentFolder.Depth <= parentDepth)
                 {
                     yield break;
                 }
