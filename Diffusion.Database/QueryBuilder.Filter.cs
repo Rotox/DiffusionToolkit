@@ -572,7 +572,7 @@ namespace Diffusion.Database
 
                 orConditions.Add(comparison == NodeComparison.Equals
                     ? new KeyValuePair<string, object>("(Model = ?)", name)
-                    : new KeyValuePair<string, object>("(Model LIKE ?)", name.Replace("*", "%")));
+                    : new KeyValuePair<string, object>("(Model LIKE ?)", $"%{name}%"));
             }
 
             return orConditions;
