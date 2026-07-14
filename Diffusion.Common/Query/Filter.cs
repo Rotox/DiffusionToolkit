@@ -32,6 +32,8 @@ public class Filter
     public string ModelHash { get; set; }
     public bool UseModelName { get; set; }
     public string ModelName { get; set; }
+    public bool ModelNameExpanded { get; set; }
+    public IEnumerable<MultiValueFilter>? ModelNameFilters { get; set; }
 
     public bool UseFavorite { get; set; }
     public bool Favorite { get; set; }
@@ -110,6 +112,7 @@ public class Filter
                             UseInAlbum ||
                             UseUnavailable ||
                             NodeFilters != null && NodeFilters.Any(d => d.IsActive) ||
+                            ModelNameFilters != null && ModelNameFilters.Any(f => !string.IsNullOrEmpty(f.Value)) ||
                             AlbumIds != null && AlbumIds.Count >= 0
                             );
 

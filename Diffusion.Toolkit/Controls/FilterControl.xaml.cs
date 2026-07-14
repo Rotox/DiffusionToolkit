@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -202,6 +203,16 @@ namespace Diffusion.Toolkit.Controls
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Filter.UseModelName = true;
+        }
+
+        private void ExpandModelNameFilter_OnClick(object sender, RoutedEventArgs e)
+        {
+            Filter.ExpandModelNameFilter();
+        }
+
+        private void ModelNameMultiValueFilterControl_OnAddRowRequested(object sender, EventArgs e)
+        {
+            Filter.AddModelNameFilter();
         }
 
         private void AddFilter_OnClick(object sender, RoutedEventArgs e)

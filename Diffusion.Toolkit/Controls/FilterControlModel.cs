@@ -72,6 +72,20 @@ public class FilterControlModel : BaseNotify
         };
 
         AddNodeFilter();
+
+        ModelNameFilters = new ObservableCollection<MultiValueFilterRow>();
+
+        ModelNameOperatorOptions = new List<NameValue<NodeOperation>>()
+        {
+            new() { Name = "or", Value = NodeOperation.UNION },
+            new() { Name = "not", Value = NodeOperation.EXCEPT },
+        };
+
+        ModelNameComparisonOptions = new List<NameValue<NodeComparison>>()
+        {
+            new() { Name = "is", Value = NodeComparison.Equals },
+            new() { Name = "contains", Value = NodeComparison.Contains },
+        };
     }
 
     private string GetLocalizedText(string key)
@@ -105,6 +119,32 @@ public class FilterControlModel : BaseNotify
 
     private void NodeFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+    }
+
+    private void ModelNameFiltersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is not null)
+        {
+            RegisterModelNameFilters(e.NewItems.Cast<MultiValueFilterRow>());
+        }
+
+        OnPropertyChanged(nameof(IsActive));
+    }
+
+    private void RegisterModelNameFilters(IEnumerable<MultiValueFilterRow> rows)
+    {
+        foreach (var row in rows)
+        {
+            row.IsFirst = ModelNameFilters.IndexOf(row) == 0;
+            row.RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveModelNameFilter);
+            row.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(MultiValueFilterRow.Value))
+                {
+                    OnPropertyChanged(nameof(IsActive));
+                }
+            };
+        }
     }
 
     private void FilterControlModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -170,6 +210,45 @@ public class FilterControlModel : BaseNotify
     public void RemoveNodeFilter(NodeFilter filter)
     {
         NodeFilters.Remove(filter);
+    }
+
+    public void AddModelNameFilter()
+    {
+        var row = new MultiValueFilterRow
+        {
+            RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveModelNameFilter),
+            Operation = NodeOperation.UNION,
+            Comparison = NodeComparison.Contains
+        };
+
+        ModelNameFilters.Add(row);
+    }
+
+    public void RemoveModelNameFilter(MultiValueFilterRow row)
+    {
+        ModelNameFilters.Remove(row);
+
+        for (var i = 0; i < ModelNameFilters.Count; i++)
+        {
+            ModelNameFilters[i].IsFirst = i == 0;
+        }
+    }
+
+    public void ExpandModelNameFilter()
+    {
+        if (ModelNameFilters.Count == 0)
+        {
+            ModelNameFilters.Add(new MultiValueFilterRow
+            {
+                RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveModelNameFilter),
+                IsFirst = true,
+                Operation = NodeOperation.UNION,
+                Comparison = NodeComparison.Contains,
+                Value = ModelName
+            });
+        }
+
+        ModelNameExpanded = true;
     }
 
     public bool UsePrompt
@@ -317,6 +396,12 @@ public class FilterControlModel : BaseNotify
     }
 
     public string ModelName
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public bool ModelNameExpanded
     {
         get;
         set => SetField(ref field, value);
@@ -596,7 +681,8 @@ public class FilterControlModel : BaseNotify
                              UseNoMetadata ||
                              UseInAlbum ||
                              UseUnavailable ||
-                             NodeFilters.Any(d => d.IsActive));
+                             NodeFilters.Any(d => d.IsActive) ||
+                             ModelNameFilters.Any(f => !string.IsNullOrEmpty(f.Value)));
 
     public ObservableCollection<NodeFilter> NodeFilters
     {
@@ -606,6 +692,17 @@ public class FilterControlModel : BaseNotify
             SetField(ref field, value);
             RegisterNodeFilters(field);
             field.CollectionChanged += NodeFiltersOnCollectionChanged;
+        }
+    }
+
+    public ObservableCollection<MultiValueFilterRow> ModelNameFilters
+    {
+        get;
+        set
+        {
+            SetField(ref field, value);
+            RegisterModelNameFilters(field);
+            field.CollectionChanged += ModelNameFiltersOnCollectionChanged;
         }
     }
 
@@ -625,6 +722,8 @@ public class FilterControlModel : BaseNotify
         SizeOp = "pixels";
         ModelHash = String.Empty;
         ModelName = String.Empty;
+        ModelNameExpanded = false;
+        ModelNameFilters.Clear();
         Favorite = false;
         Rating = null;
         RatingOp = String.Empty;
@@ -688,6 +787,9 @@ public class FilterControlModel : BaseNotify
 
     public IEnumerable<NameValue<NodeOperation>>? NodeOperations { get; set; }
     public IEnumerable<NameValue<NodeComparison>>? NodePropertyComparisons { get; set; }
+
+    public IEnumerable<NameValue<NodeOperation>>? ModelNameOperatorOptions { get; set; }
+    public IEnumerable<NameValue<NodeComparison>>? ModelNameComparisonOptions { get; set; }
 
 }
 

@@ -20,6 +20,7 @@
     <converters:IsStrValueBoolConverter x:Key="isStrValueBool"></converters:IsStrValueBoolConverter>
     <converters:NotBoolConverter x:Key="notBool"></converters:NotBoolConverter>
     <converters:InverseBoolToVisibilityCollapsedConverter x:Key="invBoolToVis"></converters:InverseBoolToVisibilityCollapsedConverter>
+    <converters:BoolToVisibilityCollapsedConverter x:Key="boolToVis"></converters:BoolToVisibilityCollapsedConverter>
     <converters:StringEqualsToVisibilityConverter x:Key="strEqToVis"/>
     <Style x:Key="CalendarDayButtonStyle" TargetType="{x:Type CalendarDayButton}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -343,16 +344,38 @@
                             <TextBox VerticalContentAlignment="Center" Text="{Binding ModelHash}" KeyDown="UIElement_OnKeyDown" Grid.Column="1" Height="20"></TextBox>
                         </Grid>
                         <Grid Margin="0,0,0,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <CheckBox IsChecked="{Binding UseModelName}" VerticalContentAlignment="Center" Content="{lex:Loc Filter.Metadata.ModelName}"></CheckBox>
-                            <ComboBox IsEditable="True" ItemsSource="{Binding Models, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" 
-                                Text="{Binding ModelName}" KeyDown="UIElement_OnKeyDown" 
-                                SelectionChanged="Selector_OnSelectionChanged"
-                                Grid.Column="1" Height="20">
-                            </ComboBox>
+                            <Grid Visibility="{Binding ModelNameExpanded, Converter={StaticResource invBoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding UseModelName}" VerticalContentAlignment="Center" Content="{lex:Loc Filter.Metadata.ModelName}"></CheckBox>
+                                <DockPanel Grid.Column="1">
+                                    <Button DockPanel.Dock="Right" Width="20" Height="20" Opacity="1" Style="{StaticResource BorderlessButton}"
+                                        Click="ExpandModelNameFilter_OnClick" ToolTip="{lex:Loc Filter.Metadata.ModelName.Expand}">
+                                        <fa:ImageAwesome Icon="AngleRight" Height="10" Foreground="{DynamicResource ForegroundBrush}"></fa:ImageAwesome>
+                                    </Button>
+                                    <ComboBox IsEditable="True" ItemsSource="{Binding Models, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        Text="{Binding ModelName}" KeyDown="UIElement_OnKeyDown"
+                                        SelectionChanged="Selector_OnSelectionChanged"
+                                        Height="20">
+                                    </ComboBox>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Visibility="{Binding ModelNameExpanded, Converter={StaticResource boolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label VerticalAlignment="Top" Content="{lex:Loc Filter.Metadata.ModelName}"></Label>
+                                <local:MultiValueFilterControl Grid.Column="1"
+                                    Rows="{Binding ModelNameFilters}"
+                                    ValueOptions="{Binding Models, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                    OperatorOptions="{Binding ModelNameOperatorOptions}"
+                                    ComparisonOptions="{Binding ModelNameComparisonOptions}"
+                                    AddRowRequested="ModelNameMultiValueFilterControl_OnAddRowRequested">
+                                </local:MultiValueFilterControl>
+                            </Grid>
                         </Grid>
                         <!--<Grid Margin="0,0,0,5">
         <Grid.ColumnDefinitions>

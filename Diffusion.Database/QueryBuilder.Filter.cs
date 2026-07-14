@@ -489,6 +489,23 @@ namespace Diffusion.Database
 
         private static void FilterModelName(Filter filter, List<KeyValuePair<string, object>> conditions)
         {
+            if (filter.ModelNameExpanded)
+            {
+                var activeRows = filter.ModelNameFilters?
+                    .Where(f => !string.IsNullOrEmpty(f.Value))
+                    .ToList();
+
+                if (activeRows != null && activeRows.Any())
+                {
+                    FilterModelNameRows(activeRows, conditions);
+                }
+
+                // Expanded with no active rows (e.g. the seeded row was removed) means
+                // "no Model Name filtering" - do not fall back to the legacy UseModelName/ModelName
+                // fields, since they're no longer shown/editable once expanded.
+                return;
+            }
+
             if (filter.UseModelName && !string.IsNullOrEmpty(filter.ModelName) && _models != null && _models.Any())
             {
                 var orConditions = new List<KeyValuePair<string, object>>();
@@ -523,6 +540,66 @@ namespace Diffusion.Database
                 {
                     conditions.Add(new KeyValuePair<string, object>($"(0 == 1)", null));
                 }
+            }
+        }
+
+        private static List<KeyValuePair<string, object>> BuildModelNameOrConditions(string rawValue, NodeComparison comparison)
+        {
+            var orConditions = new List<KeyValuePair<string, object>>();
+
+            var names = rawValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            foreach (var name in names)
+            {
+                if (_models != null)
+                {
+                    foreach (var model in _models)
+                    {
+                        var isMatch = comparison == NodeComparison.Equals
+                            ? model.Filename.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+                            : model.Filename.Contains(name, StringComparison.InvariantCultureIgnoreCase);
+
+                        if (isMatch)
+                        {
+                            orConditions.Add(new KeyValuePair<string, object>("(ModelHash = ? COLLATE NOCASE)", model.Hash));
+                            if (!string.IsNullOrEmpty(model.SHA256))
+                            {
+                                orConditions.Add(new KeyValuePair<string, object>("(ModelHash = ? COLLATE NOCASE)", model.SHA256.Substring(0, 10)));
+                            }
+                        }
+                    }
+                }
+
+                orConditions.Add(comparison == NodeComparison.Equals
+                    ? new KeyValuePair<string, object>("(Model = ?)", name)
+                    : new KeyValuePair<string, object>("(Model LIKE ?)", name.Replace("*", "%")));
+            }
+
+            return orConditions;
+        }
+
+        private static void FilterModelNameRows(List<MultiValueFilter> rows, List<KeyValuePair<string, object>> conditions)
+        {
+            var orGroup = new List<KeyValuePair<string, object>>();
+
+            foreach (var row in rows.Where(r => r.Operation != NodeOperation.EXCEPT))
+            {
+                orGroup.AddRange(BuildModelNameOrConditions(row.Value, row.Comparison));
+            }
+
+            if (orGroup.Any())
+            {
+                var keys = string.Join(" OR ", orGroup.Select(c => c.Key));
+                var values = orGroup.Select(c => c.Value);
+                conditions.Add(new KeyValuePair<string, object>($"({keys})", values));
+            }
+
+            foreach (var row in rows.Where(r => r.Operation == NodeOperation.EXCEPT))
+            {
+                var notGroup = BuildModelNameOrConditions(row.Value, row.Comparison);
+                var keys = string.Join(" OR ", notGroup.Select(c => c.Key));
+                var values = notGroup.Select(c => c.Value);
+                conditions.Add(new KeyValuePair<string, object>($"(NOT ({keys}))", values));
             }
         }
 

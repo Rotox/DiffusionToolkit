@@ -40,6 +40,7 @@ public static class SearchControlModelExtensions
         model.ModelHash = filter.ModelHash;
         model.UseModelName = filter.UseModelName;
         model.ModelName = filter.ModelName;
+        model.ModelNameExpanded = filter.ModelNameExpanded;
 
         model.UseFavorite = filter.UseFavorite;
         model.Favorite = filter.Favorite;
@@ -103,6 +104,15 @@ public static class SearchControlModelExtensions
             Value = d.Value,
         }));
 
+        model.ModelNameFilters = filter.ModelNameFilters == null
+            ? new ObservableCollection<MultiValueFilterRow>()
+            : new ObservableCollection<MultiValueFilterRow>(filter.ModelNameFilters.Select(d => new MultiValueFilterRow
+            {
+                Operation = d.Operation,
+                Comparison = d.Comparison,
+                Value = d.Value,
+            }));
+
         return model;
     }
 
@@ -136,6 +146,7 @@ public static class SearchControlModelExtensions
         filter.ModelHash = model.ModelHash;
         filter.UseModelName = model.UseModelName;
         filter.ModelName = model.ModelName;
+        filter.ModelNameExpanded = model.ModelNameExpanded;
 
         filter.UseFavorite = model.UseFavorite;
         filter.Favorite = model.Favorite;
@@ -199,6 +210,13 @@ public static class SearchControlModelExtensions
             Operation = d.Operation,
             Node = d.Node,
             Property = d.Property,
+            Comparison = d.Comparison,
+            Value = d.Value,
+        }).ToList();
+
+        filter.ModelNameFilters = model.ModelNameFilters.Select(d => new MultiValueFilter
+        {
+            Operation = d.Operation,
             Comparison = d.Comparison,
             Value = d.Value,
         }).ToList();
