@@ -646,6 +646,12 @@ public class MainModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public IEnumerable<string> LoraNames
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public string ActiveView
     {
         get;

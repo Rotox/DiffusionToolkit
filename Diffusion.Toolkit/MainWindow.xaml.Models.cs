@@ -42,6 +42,11 @@ namespace Diffusion.Toolkit
 
         }
 
+        public void LoadLoraNames()
+        {
+            _model.LoraNames = _dataStore.GetLoraNames();
+        }
+
         private void ImageModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ModelViewModel.IsTicked))

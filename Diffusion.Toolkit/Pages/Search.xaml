@@ -1095,11 +1095,12 @@
                                 <RowDefinition Height="510"/>
                                 <RowDefinition Height="30"/>
                             </Grid.RowDefinitions>
-                            <controls:FilterControl  
+                            <controls:FilterControl
                                 Grid.Row="0"
                                 Models="{Binding MainModel.ImageModelNames}"
-                                Filter="{Binding Filter}" 
-                                SearchCommand="{Binding FilterCommand}" 
+                                Loras="{Binding MainModel.LoraNames}"
+                                Filter="{Binding Filter}"
+                                SearchCommand="{Binding FilterCommand}"
                                 />
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>

@@ -35,6 +35,10 @@ public class Filter
     public bool ModelNameExpanded { get; set; }
     public IEnumerable<MultiValueFilter>? ModelNameFilters { get; set; }
 
+    public bool LoraExpanded { get; set; }
+    public IEnumerable<MultiValueFilter>? LoraFilters { get; set; }
+    public bool NoLora { get; set; }
+
     public bool UseFavorite { get; set; }
     public bool Favorite { get; set; }
     public bool UseRating { get; set; }
@@ -113,6 +117,8 @@ public class Filter
                             UseUnavailable ||
                             NodeFilters != null && NodeFilters.Any(d => d.IsActive) ||
                             ModelNameFilters != null && ModelNameFilters.Any(f => !string.IsNullOrEmpty(f.Value)) ||
+                            LoraFilters != null && LoraFilters.Any(f => !string.IsNullOrEmpty(f.Value)) ||
+                            NoLora ||
                             AlbumIds != null && AlbumIds.Count >= 0
                             );
 

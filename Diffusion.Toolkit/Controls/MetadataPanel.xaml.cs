@@ -52,14 +52,9 @@ private static void PropertyChangedCallback(DependencyObject d, DependencyProper
         {
             if (!string.IsNullOrEmpty(image.Prompt))
             {
-                var loraMatches = Regex.Matches(image.Prompt, "<lora:([^:>]+):([^>]+)>");
-                var loras = new List<LoraEntry>();
-                foreach (Match m in loraMatches)
-                {
-                    var rawName = m.Groups[1].Value;
-                    var name = System.IO.Path.GetFileName(rawName.Replace((char)47, System.IO.Path.DirectorySeparatorChar));
-                    loras.Add(new LoraEntry { Name = name, Weight = m.Groups[2].Value });
-                }
+                var loras = LoraParser.ParseLoraTokens(image.Prompt)
+                    .Select(t => new LoraEntry { Name = t.Name, Weight = t.Weight })
+                    .ToList();
                 image.Loras = loras.Count > 0 ? loras : null;
             }
             else

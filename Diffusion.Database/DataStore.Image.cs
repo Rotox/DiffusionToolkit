@@ -191,6 +191,10 @@ namespace Diffusion.Database
                 var albumCommand = db.CreateCommand(albumQuery);
                 albumCommand.ExecuteNonQuery();
 
+                var loraQuery = $"DELETE FROM ImageLora WHERE ImageId IN {deletedIds}";
+                var loraCommand = db.CreateCommand(loraQuery);
+                loraCommand.ExecuteNonQuery();
+
                 var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
                 var command = db.CreateCommand(query);
                 command.ExecuteNonQuery();
@@ -336,6 +340,7 @@ namespace Diffusion.Database
                     {
                         var ids = command.ExecuteQuery<ReturnId>();
                         image.Id = ids[0].Id;
+                        SetImageLoras(db, image.Id, LoraParser.ParseLoraTokens(image.Prompt).Select(t => t.Name));
                     }
                     updated += 1;
                 }
@@ -443,6 +448,19 @@ namespace Diffusion.Database
                 foreach (var item in images.Zip(returnIds))
                 {
                     item.First.Id = item.Second.Id;
+                }
+
+                lock (_lock)
+                {
+                    foreach (var image in images)
+                    {
+                        if (image.Id == 0)
+                        {
+                            continue;
+                        }
+
+                        SetImageLoras(db, image.Id, LoraParser.ParseLoraTokens(image.Prompt).Select(t => t.Name));
+                    }
                 }
 
                 added = returnIds.Count;

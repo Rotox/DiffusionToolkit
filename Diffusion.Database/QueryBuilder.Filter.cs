@@ -46,6 +46,7 @@ namespace Diffusion.Database
             FilterSampler(filter, conditions);
             FilterHash(filter, conditions);
             FilterModelName(filter, conditions);
+            FilterLora(filter, conditions);
             FilterCFG(filter, conditions);
             FilterSize(filter, conditions);
             FilterAestheticScore(filter, conditions);
@@ -600,6 +601,89 @@ namespace Diffusion.Database
                 var keys = string.Join(" OR ", notGroup.Select(c => c.Key));
                 var values = notGroup.Select(c => c.Value);
                 conditions.Add(new KeyValuePair<string, object>($"(NOT ({keys}))", values));
+            }
+        }
+
+        private static void FilterLora(Filter filter, List<KeyValuePair<string, object>> conditions)
+        {
+            if (filter.NoLora)
+            {
+                // Defensive: ignore LoraFilters entirely at the query level when NoLora is
+                // set, even though the UI also disables the rows/Add button - protects
+                // against a stale/hand-edited persisted filter having both set.
+                conditions.Add(new KeyValuePair<string, object>(
+                    "NOT EXISTS (SELECT 1 FROM ImageLora WHERE ImageId = m1.Id)", null));
+                return;
+            }
+
+            if (!filter.LoraExpanded)
+            {
+                return;
+            }
+
+            var activeRows = filter.LoraFilters?.Where(f => !string.IsNullOrEmpty(f.Value)).ToList();
+
+            if (activeRows != null && activeRows.Any())
+            {
+                FilterLoraRows(activeRows, conditions);
+            }
+        }
+
+        private static List<KeyValuePair<string, object>> BuildLoraNameConditions(string rawValue, NodeComparison comparison)
+        {
+            var conditions = new List<KeyValuePair<string, object>>();
+            var names = rawValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            foreach (var name in names)
+            {
+                conditions.Add(comparison == NodeComparison.Equals
+                    ? new KeyValuePair<string, object>("(l.Name = ?)", name)
+                    : new KeyValuePair<string, object>("(l.Name LIKE ?)", $"%{name}%"));
+            }
+
+            return conditions;
+        }
+
+        private static void FilterLoraRows(List<MultiValueFilter> rows, List<KeyValuePair<string, object>> conditions)
+        {
+            // OR rows: combined into a SINGLE EXISTS clause with names OR'd together -
+            // any one of these LoRAs being present satisfies the whole OR group.
+            var orRows = rows.Where(r => r.Operation == NodeOperation.UNION).ToList();
+
+            if (orRows.Any())
+            {
+                var nameConditions = new List<KeyValuePair<string, object>>();
+
+                foreach (var row in orRows)
+                {
+                    nameConditions.AddRange(BuildLoraNameConditions(row.Value, row.Comparison));
+                }
+
+                var keys = string.Join(" OR ", nameConditions.Select(c => c.Key));
+                var values = nameConditions.Select(c => c.Value);
+                conditions.Add(new KeyValuePair<string, object>(
+                    $"EXISTS (SELECT 1 FROM ImageLora il JOIN Lora l ON l.Id = il.LoraId WHERE il.ImageId = m1.Id AND ({keys}))", values));
+            }
+
+            // AND rows: EACH becomes its own top-level ANDed EXISTS clause - every AND row
+            // must independently be satisfied by a (possibly different) LoRA on the image.
+            foreach (var row in rows.Where(r => r.Operation == NodeOperation.INTERSECT))
+            {
+                var nameConditions = BuildLoraNameConditions(row.Value, row.Comparison);
+                var keys = string.Join(" OR ", nameConditions.Select(c => c.Key));
+                var values = nameConditions.Select(c => c.Value);
+                conditions.Add(new KeyValuePair<string, object>(
+                    $"EXISTS (SELECT 1 FROM ImageLora il JOIN Lora l ON l.Id = il.LoraId WHERE il.ImageId = m1.Id AND ({keys}))", values));
+            }
+
+            // NOT rows: each becomes its own top-level ANDed NOT EXISTS clause.
+            foreach (var row in rows.Where(r => r.Operation == NodeOperation.EXCEPT))
+            {
+                var nameConditions = BuildLoraNameConditions(row.Value, row.Comparison);
+                var keys = string.Join(" OR ", nameConditions.Select(c => c.Key));
+                var values = nameConditions.Select(c => c.Value);
+                conditions.Add(new KeyValuePair<string, object>(
+                    $"NOT EXISTS (SELECT 1 FROM ImageLora il JOIN Lora l ON l.Id = il.LoraId WHERE il.ImageId = m1.Id AND ({keys}))", values));
             }
         }
 

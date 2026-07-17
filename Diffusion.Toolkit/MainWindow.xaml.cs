@@ -830,6 +830,7 @@ namespace Diffusion.Toolkit
             LoadQueries();
             LoadModels();
             LoadImageModels();
+            LoadLoraNames();
             LoadTags();
             await InitFolders();
 

@@ -61,6 +61,20 @@ namespace Diffusion.Toolkit.Controls
             set => SetValue(ModelsProperty, value);
         }
 
+        public static readonly DependencyProperty LorasProperty =
+            DependencyProperty.Register(
+                name: nameof(Loras),
+                propertyType: typeof(IEnumerable<string>),
+                ownerType: typeof(FilterControl),
+                typeMetadata: new UIPropertyMetadata(null)
+            );
+
+        public IEnumerable<string> Loras
+        {
+            get => (IEnumerable<string>)GetValue(LorasProperty);
+            set => SetValue(LorasProperty, value);
+        }
+
         static PropertyInfo[] props = typeof(FilterControlModel).GetProperties();
 
         private static void FilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -213,6 +227,16 @@ namespace Diffusion.Toolkit.Controls
         private void ModelNameMultiValueFilterControl_OnAddRowRequested(object sender, EventArgs e)
         {
             Filter.AddModelNameFilter();
+        }
+
+        private void ExpandLoraFilter_OnClick(object sender, RoutedEventArgs e)
+        {
+            Filter.ExpandLoraFilter();
+        }
+
+        private void LoraMultiValueFilterControl_OnAddRowRequested(object sender, EventArgs e)
+        {
+            Filter.AddLoraFilter();
         }
 
         private void AddFilter_OnClick(object sender, RoutedEventArgs e)

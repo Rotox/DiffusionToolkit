@@ -564,6 +564,10 @@ LEFT JOIN (SELECT RootId, COUNT(*) AS Children FROM directoryTree WHERE Depth = 
                 var albumCommand = db.CreateCommand(albumQuery);
                 albumCommand.ExecuteNonQuery();
 
+                var loraQuery = $"DELETE FROM ImageLora WHERE ImageId IN {deletedIds}";
+                var loraCommand = db.CreateCommand(loraQuery);
+                loraCommand.ExecuteNonQuery();
+
                 var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
                 var command = db.CreateCommand(query);
                 images = command.ExecuteNonQuery();
@@ -610,6 +614,10 @@ LEFT JOIN (SELECT RootId, COUNT(*) AS Children FROM directoryTree WHERE Depth = 
                 var albumCommand = db.CreateCommand(albumQuery);
                 albumCommand.ExecuteNonQuery();
 
+                var loraQuery = $"DELETE FROM ImageLora WHERE ImageId IN {deletedIds}";
+                var loraCommand = db.CreateCommand(loraQuery);
+                loraCommand.ExecuteNonQuery();
+
                 var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
                 var command = db.CreateCommand(query);
                 images = command.ExecuteNonQuery();
@@ -644,6 +652,10 @@ LEFT JOIN (SELECT RootId, COUNT(*) AS Children FROM directoryTree WHERE Depth = 
             var albumQuery = $"DELETE FROM AlbumImage WHERE ImageId IN {deletedIds}";
             var albumCommand = db.CreateCommand(albumQuery);
             albumCommand.ExecuteNonQuery();
+
+            var loraQuery = $"DELETE FROM ImageLora WHERE ImageId IN {deletedIds}";
+            var loraCommand = db.CreateCommand(loraQuery);
+            loraCommand.ExecuteNonQuery();
 
             var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
             var command = db.CreateCommand(query);

@@ -377,6 +377,49 @@
                                 </local:MultiValueFilterControl>
                             </Grid>
                         </Grid>
+                        <Grid Margin="0,0,0,5">
+                            <Grid Visibility="{Binding LoraExpanded, Converter={StaticResource invBoolToVis}}"
+                                IsEnabled="{Binding NoLora, Converter={StaticResource notBool}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="{lex:Loc Filter.Metadata.Lora}"></Label>
+                                <DockPanel Grid.Column="1">
+                                    <Button DockPanel.Dock="Right" Width="20" Height="20" Opacity="1" Style="{StaticResource BorderlessButton}"
+                                        Click="ExpandLoraFilter_OnClick" ToolTip="{lex:Loc Filter.Metadata.Lora.Expand}">
+                                        <fa:ImageAwesome Icon="AngleRight" Height="10" Foreground="{DynamicResource ForegroundBrush}"></fa:ImageAwesome>
+                                    </Button>
+                                    <ComboBox IsEditable="True" ItemsSource="{Binding Loras, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        Text="{Binding LoraFilters[0].Value, UpdateSourceTrigger=PropertyChanged}"
+                                        KeyDown="UIElement_OnKeyDown"
+                                        Height="20">
+                                    </ComboBox>
+                                </DockPanel>
+                            </Grid>
+                            <Grid Visibility="{Binding LoraExpanded, Converter={StaticResource boolToVis}}"
+                                IsEnabled="{Binding NoLora, Converter={StaticResource notBool}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label VerticalAlignment="Top" Content="{lex:Loc Filter.Metadata.Lora}"></Label>
+                                <local:MultiValueFilterControl Grid.Column="1"
+                                    Rows="{Binding LoraFilters}"
+                                    ValueOptions="{Binding Loras, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                    OperatorOptions="{Binding LoraOperatorOptions}"
+                                    ComparisonOptions="{Binding LoraComparisonOptions}"
+                                    AddRowRequested="LoraMultiValueFilterControl_OnAddRowRequested">
+                                </local:MultiValueFilterControl>
+                            </Grid>
+                        </Grid>
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="1" IsChecked="{Binding NoLora}" VerticalContentAlignment="Center" Content="{lex:Loc Filter.Metadata.NoLora}"></CheckBox>
+                        </Grid>
                         <!--<Grid Margin="0,0,0,5">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="130"/>

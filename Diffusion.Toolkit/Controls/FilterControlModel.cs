@@ -86,6 +86,28 @@ public class FilterControlModel : BaseNotify
             new() { Name = "is", Value = NodeComparison.Equals },
             new() { Name = "contains", Value = NodeComparison.Contains },
         };
+
+        LoraFilters = new ObservableCollection<MultiValueFilterRow>
+        {
+            new MultiValueFilterRow
+            {
+                Operation = NodeOperation.UNION,
+                Comparison = NodeComparison.Equals
+            }
+        };
+
+        LoraOperatorOptions = new List<NameValue<NodeOperation>>()
+        {
+            new() { Name = "or", Value = NodeOperation.UNION },
+            new() { Name = "and", Value = NodeOperation.INTERSECT },
+            new() { Name = "not", Value = NodeOperation.EXCEPT },
+        };
+
+        LoraComparisonOptions = new List<NameValue<NodeComparison>>()
+        {
+            new() { Name = "is", Value = NodeComparison.Equals },
+            new() { Name = "contains", Value = NodeComparison.Contains },
+        };
     }
 
     private string GetLocalizedText(string key)
@@ -137,6 +159,32 @@ public class FilterControlModel : BaseNotify
         {
             row.IsFirst = ModelNameFilters.IndexOf(row) == 0;
             row.RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveModelNameFilter);
+            row.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(MultiValueFilterRow.Value))
+                {
+                    OnPropertyChanged(nameof(IsActive));
+                }
+            };
+        }
+    }
+
+    private void LoraFiltersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is not null)
+        {
+            RegisterLoraFilters(e.NewItems.Cast<MultiValueFilterRow>());
+        }
+
+        OnPropertyChanged(nameof(IsActive));
+    }
+
+    private void RegisterLoraFilters(IEnumerable<MultiValueFilterRow> rows)
+    {
+        foreach (var row in rows)
+        {
+            row.IsFirst = LoraFilters.IndexOf(row) == 0;
+            row.RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveLoraFilter);
             row.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == nameof(MultiValueFilterRow.Value))
@@ -249,6 +297,39 @@ public class FilterControlModel : BaseNotify
         }
 
         ModelNameExpanded = true;
+    }
+
+    public void AddLoraFilter()
+    {
+        var row = new MultiValueFilterRow
+        {
+            RemoveCommand = new RelayCommand<MultiValueFilterRow>(RemoveLoraFilter),
+            Operation = NodeOperation.UNION,
+            Comparison = NodeComparison.Contains
+        };
+
+        LoraFilters.Add(row);
+    }
+
+    public void RemoveLoraFilter(MultiValueFilterRow row)
+    {
+        // Collapsed mode always shows row 0 inline - never remove the last remaining row.
+        if (LoraFilters.Count <= 1)
+        {
+            return;
+        }
+
+        LoraFilters.Remove(row);
+
+        for (var i = 0; i < LoraFilters.Count; i++)
+        {
+            LoraFilters[i].IsFirst = i == 0;
+        }
+    }
+
+    public void ExpandLoraFilter()
+    {
+        LoraExpanded = true;
     }
 
     public bool UsePrompt
@@ -402,6 +483,18 @@ public class FilterControlModel : BaseNotify
     }
 
     public bool ModelNameExpanded
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public bool LoraExpanded
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
+    public bool NoLora
     {
         get;
         set => SetField(ref field, value);
@@ -682,7 +775,9 @@ public class FilterControlModel : BaseNotify
                              UseInAlbum ||
                              UseUnavailable ||
                              NodeFilters.Any(d => d.IsActive) ||
-                             ModelNameFilters.Any(f => !string.IsNullOrEmpty(f.Value)));
+                             ModelNameFilters.Any(f => !string.IsNullOrEmpty(f.Value)) ||
+                             LoraFilters.Any(f => !string.IsNullOrEmpty(f.Value)) ||
+                             NoLora);
 
     public ObservableCollection<NodeFilter> NodeFilters
     {
@@ -706,6 +801,17 @@ public class FilterControlModel : BaseNotify
         }
     }
 
+    public ObservableCollection<MultiValueFilterRow> LoraFilters
+    {
+        get;
+        set
+        {
+            SetField(ref field, value);
+            RegisterLoraFilters(field);
+            field.CollectionChanged += LoraFiltersOnCollectionChanged;
+        }
+    }
+
     public void Clear()
     {
         Prompt = String.Empty;
@@ -724,6 +830,14 @@ public class FilterControlModel : BaseNotify
         ModelName = String.Empty;
         ModelNameExpanded = false;
         ModelNameFilters.Clear();
+        LoraExpanded = false;
+        NoLora = false;
+        LoraFilters.Clear();
+        LoraFilters.Add(new MultiValueFilterRow
+        {
+            Operation = NodeOperation.UNION,
+            Comparison = NodeComparison.Equals
+        });
         Favorite = false;
         Rating = null;
         RatingOp = String.Empty;
@@ -790,6 +904,9 @@ public class FilterControlModel : BaseNotify
 
     public IEnumerable<NameValue<NodeOperation>>? ModelNameOperatorOptions { get; set; }
     public IEnumerable<NameValue<NodeComparison>>? ModelNameComparisonOptions { get; set; }
+
+    public IEnumerable<NameValue<NodeOperation>>? LoraOperatorOptions { get; set; }
+    public IEnumerable<NameValue<NodeComparison>>? LoraComparisonOptions { get; set; }
 
 }
 

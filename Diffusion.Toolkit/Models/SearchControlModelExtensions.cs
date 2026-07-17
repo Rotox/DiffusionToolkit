@@ -42,6 +42,9 @@ public static class SearchControlModelExtensions
         model.ModelName = filter.ModelName;
         model.ModelNameExpanded = filter.ModelNameExpanded;
 
+        model.LoraExpanded = filter.LoraExpanded;
+        model.NoLora = filter.NoLora;
+
         model.UseFavorite = filter.UseFavorite;
         model.Favorite = filter.Favorite;
         model.UseRating = filter.UseRating;
@@ -113,6 +116,18 @@ public static class SearchControlModelExtensions
                 Value = d.Value,
             }));
 
+        model.LoraFilters = filter.LoraFilters == null || !filter.LoraFilters.Any()
+            ? new ObservableCollection<MultiValueFilterRow>
+            {
+                new MultiValueFilterRow { Operation = NodeOperation.UNION, Comparison = NodeComparison.Equals }
+            }
+            : new ObservableCollection<MultiValueFilterRow>(filter.LoraFilters.Select(d => new MultiValueFilterRow
+            {
+                Operation = d.Operation,
+                Comparison = d.Comparison,
+                Value = d.Value,
+            }));
+
         return model;
     }
 
@@ -147,6 +162,9 @@ public static class SearchControlModelExtensions
         filter.UseModelName = model.UseModelName;
         filter.ModelName = model.ModelName;
         filter.ModelNameExpanded = model.ModelNameExpanded;
+
+        filter.LoraExpanded = model.LoraExpanded;
+        filter.NoLora = model.NoLora;
 
         filter.UseFavorite = model.UseFavorite;
         filter.Favorite = model.Favorite;
@@ -215,6 +233,13 @@ public static class SearchControlModelExtensions
         }).ToList();
 
         filter.ModelNameFilters = model.ModelNameFilters.Select(d => new MultiValueFilter
+        {
+            Operation = d.Operation,
+            Comparison = d.Comparison,
+            Value = d.Value,
+        }).ToList();
+
+        filter.LoraFilters = model.LoraFilters.Select(d => new MultiValueFilter
         {
             Operation = d.Operation,
             Comparison = d.Comparison,

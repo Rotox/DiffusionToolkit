@@ -154,6 +154,14 @@ public partial class DataStore
                 db.CreateIndex<AlbumImage>(album => album.AlbumId);
                 db.CreateIndex<AlbumImage>(album => album.ImageId);
 
+                db.CreateTable<Lora>();
+                db.CreateIndex<Lora>(lora => lora.Name, true);
+
+                CreateImageLoraTable(db);
+                db.CreateTable<ImageLora>();
+                db.CreateIndex<ImageLora>(il => il.ImageId);
+                db.CreateIndex<ImageLora>(il => il.LoraId);
+
                 db.CreateTable<Node>();
                 db.CreateIndex<Node>(node => node.ImageId);
                 db.CreateIndex<Node>(node => node.Name);
@@ -214,6 +222,20 @@ public partial class DataStore
             ""ImageId""   integer,
             CONSTRAINT ""FK_AlbumImage_AlbumId"" FOREIGN KEY(""AlbumId"") REFERENCES Album(""Id""),
             CONSTRAINT ""FK_AlbumImage_ImageId"" FOREIGN KEY(""ImageId"") REFERENCES Image(""Id"")
+        );
+        ";
+        var command = db.CreateCommand(sql);
+        command.ExecuteNonQuery();
+    }
+
+    void CreateImageLoraTable(SQLiteConnection db)
+    {
+        var sql = @"
+        CREATE TABLE IF NOT EXISTS ""ImageLora""(
+            ""ImageId""   integer,
+            ""LoraId""    integer,
+            CONSTRAINT ""FK_ImageLora_ImageId"" FOREIGN KEY(""ImageId"") REFERENCES Image(""Id""),
+            CONSTRAINT ""FK_ImageLora_LoraId"" FOREIGN KEY(""LoraId"") REFERENCES Lora(""Id"")
         );
         ";
         var command = db.CreateCommand(sql);
