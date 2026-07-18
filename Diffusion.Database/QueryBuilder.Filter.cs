@@ -619,8 +619,11 @@ namespace Diffusion.Database
                     conditions.Add(new KeyValuePair<string, object>(
                         "NOT EXISTS (SELECT 1 FROM ImageLora WHERE ImageId = m1.Id)", null));
                 }
-                else if (filter.LoraExpanded)
+                else
                 {
+                    // LoraExpanded is a UI-layout concern only (collapsed vs. expanded row
+                    // editor) - row 0 of LoraFilters is the data source for the collapsed
+                    // state too, so query-building must not gate on it.
                     var activeRows = filter.LoraFilters?.Where(f => !string.IsNullOrEmpty(f.Value)).ToList();
 
                     if (activeRows != null && activeRows.Any())
