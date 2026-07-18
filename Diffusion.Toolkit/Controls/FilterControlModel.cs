@@ -189,6 +189,7 @@ public class FilterControlModel : BaseNotify
             {
                 if (args.PropertyName == nameof(MultiValueFilterRow.Value))
                 {
+                    UseLora = true;
                     OnPropertyChanged(nameof(IsActive));
                 }
             };
@@ -488,6 +489,12 @@ public class FilterControlModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public bool UseLora
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public bool LoraExpanded
     {
         get;
@@ -756,6 +763,7 @@ public class FilterControlModel : BaseNotify
                              UseSize ||
                              UseModelHash ||
                              UseModelName ||
+                             UseLora ||
                              UseFavorite ||
                              UseRating ||
                              Unrated ||
@@ -877,6 +885,7 @@ public class FilterControlModel : BaseNotify
         UseSize = false;
         UseModelHash = false;
         UseModelName = false;
+        UseLora = false;
         UseFavorite = false;
         UseRating = false;
         UseTypes = false;

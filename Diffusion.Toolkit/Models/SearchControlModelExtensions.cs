@@ -42,6 +42,7 @@ public static class SearchControlModelExtensions
         model.ModelName = filter.ModelName;
         model.ModelNameExpanded = filter.ModelNameExpanded;
 
+        model.UseLora = filter.UseLora;
         model.LoraExpanded = filter.LoraExpanded;
         model.NoLora = filter.NoLora;
 
@@ -163,6 +164,7 @@ public static class SearchControlModelExtensions
         filter.ModelName = model.ModelName;
         filter.ModelNameExpanded = model.ModelNameExpanded;
 
+        filter.UseLora = model.UseLora;
         filter.LoraExpanded = model.LoraExpanded;
         filter.NoLora = model.NoLora;
 

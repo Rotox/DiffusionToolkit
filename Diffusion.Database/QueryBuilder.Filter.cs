@@ -606,26 +606,28 @@ namespace Diffusion.Database
 
         private static void FilterLora(Filter filter, List<KeyValuePair<string, object>> conditions)
         {
-            if (filter.NoLora)
+            // Gated by UseLora exactly like UseRating gates Unrated/RatingOp in
+            // FilterRating - unchecking the row's own checkbox turns the whole
+            // filter off regardless of NoLora/row contents.
+            if (filter.UseLora)
             {
-                // Defensive: ignore LoraFilters entirely at the query level when NoLora is
-                // set, even though the UI also disables the rows/Add button - protects
-                // against a stale/hand-edited persisted filter having both set.
-                conditions.Add(new KeyValuePair<string, object>(
-                    "NOT EXISTS (SELECT 1 FROM ImageLora WHERE ImageId = m1.Id)", null));
-                return;
-            }
+                if (filter.NoLora)
+                {
+                    // Defensive: ignore LoraFilters entirely at the query level when NoLora is
+                    // set, even though the UI also disables the rows/Add button - protects
+                    // against a stale/hand-edited persisted filter having both set.
+                    conditions.Add(new KeyValuePair<string, object>(
+                        "NOT EXISTS (SELECT 1 FROM ImageLora WHERE ImageId = m1.Id)", null));
+                }
+                else if (filter.LoraExpanded)
+                {
+                    var activeRows = filter.LoraFilters?.Where(f => !string.IsNullOrEmpty(f.Value)).ToList();
 
-            if (!filter.LoraExpanded)
-            {
-                return;
-            }
-
-            var activeRows = filter.LoraFilters?.Where(f => !string.IsNullOrEmpty(f.Value)).ToList();
-
-            if (activeRows != null && activeRows.Any())
-            {
-                FilterLoraRows(activeRows, conditions);
+                    if (activeRows != null && activeRows.Any())
+                    {
+                        FilterLoraRows(activeRows, conditions);
+                    }
+                }
             }
         }
 

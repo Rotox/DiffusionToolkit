@@ -35,6 +35,7 @@ public class Filter
     public bool ModelNameExpanded { get; set; }
     public IEnumerable<MultiValueFilter>? ModelNameFilters { get; set; }
 
+    public bool UseLora { get; set; }
     public bool LoraExpanded { get; set; }
     public IEnumerable<MultiValueFilter>? LoraFilters { get; set; }
     public bool NoLora { get; set; }
@@ -95,6 +96,7 @@ public class Filter
                             UseSize ||
                             UseModelHash ||
                             UseModelName ||
+                            UseLora ||
                             UseFavorite ||
                             UseRating ||
                             Unrated ||

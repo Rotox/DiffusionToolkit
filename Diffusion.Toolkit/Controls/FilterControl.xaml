@@ -378,14 +378,14 @@
                             </Grid>
                         </Grid>
                         <Grid Margin="0,0,0,5">
-                            <Grid Visibility="{Binding LoraExpanded, Converter={StaticResource invBoolToVis}}"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{Binding UseLora}" VerticalContentAlignment="Center" Content="{lex:Loc Filter.Metadata.Lora}"></CheckBox>
+                            <Grid Grid.Column="1" Visibility="{Binding LoraExpanded, Converter={StaticResource invBoolToVis}}"
                                 IsEnabled="{Binding NoLora, Converter={StaticResource notBool}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="{lex:Loc Filter.Metadata.Lora}"></Label>
-                                <DockPanel Grid.Column="1">
+                                <DockPanel>
                                     <Button DockPanel.Dock="Right" Width="20" Height="20" Opacity="1" Style="{StaticResource BorderlessButton}"
                                         Click="ExpandLoraFilter_OnClick" ToolTip="{lex:Loc Filter.Metadata.Lora.Expand}">
                                         <fa:ImageAwesome Icon="AngleRight" Height="10" Foreground="{DynamicResource ForegroundBrush}"></fa:ImageAwesome>
@@ -397,14 +397,9 @@
                                     </ComboBox>
                                 </DockPanel>
                             </Grid>
-                            <Grid Visibility="{Binding LoraExpanded, Converter={StaticResource boolToVis}}"
+                            <Grid Grid.Column="1" Visibility="{Binding LoraExpanded, Converter={StaticResource boolToVis}}"
                                 IsEnabled="{Binding NoLora, Converter={StaticResource notBool}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label VerticalAlignment="Top" Content="{lex:Loc Filter.Metadata.Lora}"></Label>
-                                <local:MultiValueFilterControl Grid.Column="1"
+                                <local:MultiValueFilterControl
                                     Rows="{Binding LoraFilters}"
                                     ValueOptions="{Binding Loras, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                     OperatorOptions="{Binding LoraOperatorOptions}"
