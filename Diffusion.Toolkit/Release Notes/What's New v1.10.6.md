@@ -14,4 +14,4 @@ The metadata panel now displays the scheduler (e.g. Karras) next to the sampler 
 
 ## Fixes
 
-Fix null reference crashes when rating non-standard PNG files
+Fixed null reference crashes when rating non-standard PNG files

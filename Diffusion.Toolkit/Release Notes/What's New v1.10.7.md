@@ -22,3 +22,4 @@ Your existing library is indexed automatically on first launch — LoRA names ar
 * Fixed the contains operator matching exact names only instead of partial text
 * Fixed the LoRA filter returning unfiltered results when used without expanding the row editor
 * Fixed a stuck database migration (Scheduler column) that silently prevented any newer migrations from running
+* Fixed a crash when refreshing an unavailable folder after a sibling folder was removed
