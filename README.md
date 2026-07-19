@@ -11,6 +11,10 @@ If you find Diffusion Toolkit valuable, please consider supporting the original 
 
 # Enhancements
 
+- **Multi-value Model Name filter:** expand the Model Name row into multiple OR/NOT conditions with is/contains operators
+
+- **LoRA filter:** filter images by LoRA usage with and/or/not logic and a No LoRA option, backed by automatic indexing of image prompts
+
 - **Model name display:** Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
 
 - **Date filters:** Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
