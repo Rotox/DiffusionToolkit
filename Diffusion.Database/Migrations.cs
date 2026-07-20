@@ -38,67 +38,73 @@ public partial class Migrations
         return GetMigrations(migrationType).Any();
     }
 
-    public void Update(MigrationType migrationType)
+    public MigrationFailure? Update(MigrationType migrationType)
     {
         var newMigrations = GetMigrations(migrationType);
 
-        try
+        //Logger.Log("Backing up database prior to migrations");
+
+        //CreateBackup();
+
+        foreach (var methodInfo in newMigrations)
         {
-            if (newMigrations.Any())
+            var name = methodInfo.Name;
+
+            var migrate = methodInfo.GetCustomAttributes<MigrateAttribute>().First();
+
+            if (migrate is { Name: { } })
             {
-                //Logger.Log("Backing up database prior to migrations");
+                name = migrate.Name;
+            }
 
-                //CreateBackup();
+            try
+            {
+                var sql = (string)methodInfo.Invoke(this, null)!;
 
-                foreach (var methodInfo in newMigrations)
+                if (sql != null)
                 {
-                    var name = methodInfo.Name;
-
-                    var migrate = methodInfo.GetCustomAttributes<MigrateAttribute>().First();
-
-                    if (migrate is { Name: { } })
+                    if (!migrate.NoTransaction)
                     {
-                        name = migrate.Name;
+                        _db.BeginTransaction();
                     }
 
-                    var sql = (string)methodInfo.Invoke(this, null)!;
+                    var statements = sql.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-
-
-                    if (sql != null)
+                    foreach (var statement in statements)
                     {
-                        if (!migrate.NoTransaction)
+                        if (statement.Trim().Length > 0)
                         {
-                            _db.BeginTransaction();
-                        }
-
-                        var statements = sql.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (var statement in statements)
-                        {
-                            if (statement.Trim().Length > 0)
-                            {
-                                var command = _db.CreateCommand(statement);
-                                command.ExecuteNonQuery();
-                            }
-                        }
-
-                        _db.Execute("INSERT INTO Migration (Name) VALUES (?)", name);
-
-                        if (!migrate.NoTransaction)
-                        {
-                            _db.Commit();
+                            var command = _db.CreateCommand(statement);
+                            command.ExecuteNonQuery();
                         }
                     }
 
-                    Logger.Log($"Executed Migration {name}");
+                    _db.Execute("INSERT INTO Migration (Name) VALUES (?)", name);
+
+                    if (!migrate.NoTransaction)
+                    {
+                        _db.Commit();
+                    }
                 }
+
+                Logger.Log($"Executed Migration {name}");
+            }
+            catch (Exception e)
+            {
+                // Safe even when the runner never opened a transaction (e.g. the
+                // migration threw before returning SQL): Rollback() is a no-op
+                // unless _transactionDepth > 0.
+                _db.Rollback();
+
+                var exception = e is TargetInvocationException { InnerException: { } inner } ? inner : e;
+
+                Logger.Log($"Error executing migration {name}: {exception.Message}");
+                Logger.Log($"{exception.StackTrace}");
+
+                return new MigrationFailure(name, migrationType, exception);
             }
         }
-        catch (Exception e)
-        {
-            Logger.Log($"Error executing migration: {e.Message}");
-            Logger.Log($"{e.StackTrace}");
-        }
+
+        return null;
     }
 }

@@ -676,7 +676,7 @@ namespace Diffusion.Toolkit
             Logger.Log($"Initializing pages");
 
 
-            await dataStore.Create(
+            var migrationFailures = await dataStore.Create(
                 () => Dispatcher.Invoke(() => _messagePopupManager.ShowMessage("Please wait while we update your database", "Updating Database")),
                 (handle) =>
                 {
@@ -923,6 +923,14 @@ namespace Diffusion.Toolkit
             RenderOptions.ProcessRenderMode = _settings.RenderMode;
 
             Logger.Log($"Init completed");
+
+            foreach (var migrationFailure in migrationFailures)
+            {
+                await ServiceLocator.MessageService.ShowMedium(
+                    GetLocalizedText("Main.MigrationFailed.Message").Replace("{migration}", migrationFailure.Name),
+                    GetLocalizedText("Main.MigrationFailed.Title"),
+                    PopupButtons.OK);
+            }
 
             if (_showReleaseNotes)
             {
