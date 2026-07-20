@@ -9,7 +9,10 @@ namespace Diffusion.Database
         {
             using var db = OpenConnection();
 
-            var loras = db.Query<Lora>($"SELECT Name FROM {nameof(Lora)} ORDER BY Name COLLATE NOCASE");
+            var loras = db.Query<Lora>($@"
+                SELECT Name FROM {nameof(Lora)}
+                WHERE EXISTS (SELECT 1 FROM {nameof(ImageLora)} WHERE {nameof(ImageLora)}.LoraId = {nameof(Lora)}.Id)
+                ORDER BY Name COLLATE NOCASE");
 
             db.Close();
 

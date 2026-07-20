@@ -403,6 +403,8 @@
   "Messages.Errors.NoImagePaths": "No image paths configured!",
   "Main.Status.ImagesInDatabase": "{count} images in database",
   "Main.Update.UpdateAvailable": "An update is available. Do you want to install now?",
+  "Main.MigrationFailed.Title": "Database update failed",
+  "Main.MigrationFailed.Message": "Diffusion Toolkit could not complete a database update: {migration}. The app will continue to run, but some newer features may not work correctly until this is resolved. Please report this at github.com/Rotox/DiffusionToolkit and include your log file.",
   "UnavailableFiles": "Scan for unavailable images",
   "UnavailableFiles.Description": "This will verify images in the selected locations. Unavailabe images will be tagged. Any previously unavailable images that are now available will be restored.",
   "UnavailableFiles.Sources.SourceLabel": "Scan selected locations:",

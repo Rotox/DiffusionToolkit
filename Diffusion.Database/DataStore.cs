@@ -42,8 +42,10 @@ public partial class DataStore
         DatabasePath = databasePath;
     }
 
-    public async Task Create(Func<object> notify, Action<object> complete)
+    public async Task<IReadOnlyList<MigrationFailure>> Create(Func<object> notify, Action<object> complete)
     {
+        var migrationFailures = new List<MigrationFailure>();
+
         var databaseDir = Path.GetDirectoryName(DatabasePath);
 
         if (!Directory.Exists(databaseDir))
@@ -71,7 +73,11 @@ public partial class DataStore
             {
                 await Task.Run(() =>
                 {
-                    migrations.Update(MigrationType.Pre);
+                    var failure = migrations.Update(MigrationType.Pre);
+                    if (failure != null)
+                    {
+                        migrationFailures.Add(failure);
+                    }
                 });
             }
             finally
@@ -201,7 +207,11 @@ public partial class DataStore
             {
                 await Task.Run(() =>
                 {
-                    migrations.Update(MigrationType.Post);
+                    var failure = migrations.Update(MigrationType.Post);
+                    if (failure != null)
+                    {
+                        migrationFailures.Add(failure);
+                    }
                 });
             }
             finally
@@ -212,6 +222,8 @@ public partial class DataStore
 
 
         db.Close();
+
+        return migrationFailures;
     }
 
     void CreateAlbumImageTable(SQLiteConnection db)
