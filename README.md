@@ -11,25 +11,33 @@ If you find Diffusion Toolkit valuable, please consider supporting the original 
 
 # Enhancements
 
-- **Model name display:** Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
+* Safer database updates: Database migrations now run individually with proper rollback on failure. A failed migration no longer silently blocks all future migrations — it is logged and reported in a message at launch, the app continues to run normally, and the migration retries automatically on the next launch.
 
-- **Date filters:** Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
+* LoRA filter dropdown cleanup: The LoRA filter dropdown now only lists LoRAs still used by at least one image in the library, so entries left behind after deleting images disappear automatically.
 
-- **Tag exclude filter:** A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
+* Multi-value Model Name filter: expand the Model Name row into multiple OR/NOT conditions with is/contains operators
 
-- **Filename search:** Search now matches against filenames in addition to metadata fields, so images can be found by their filename even when metadata is absent or incomplete.
+* LoRA filter: filter images by LoRA usage with and/or/not logic and a No LoRA option, backed by automatic indexing of image prompts
 
-- **Rename images from the context menu:** Right-clicking any image in the thumbnail view now shows a Rename option. Enter a new name in the dialog and the file extension is handled automatically. The file is renamed on disk and updated in the library in one step.
+* Model name display: Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
 
-- **Refiner display in metadata panel:** The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
+* Date filters: Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
 
-- **LoRA display in metadata panel:** The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
+* Tag exclude filter: A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
 
-- **Selected file size in status bar:** When one or more images are selected, the status bar shows the file size of the selection alongside the result count. A single selected image shows its own size; multiple selected images show the combined total.
+* Filename search: Search now matches against filenames in addition to metadata fields, so images can be found by their filename even when metadata is absent or incomplete.
 
-- **Scheduler display in metadata panel:** The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name. Images without scheduler metadata are unaffected.
+* Rename images from the context menu: Right-clicking any image in the thumbnail view now shows a Rename option. Enter a new name in the dialog and the file extension is handled automatically. The file is renamed on disk and updated in the library in one step.
 
-- **Remove Unavailable Folders:** Folders deleted outside of Diffusion Toolkit can be cleaned up via Tools → Folders → Remove Unavailable Folders. The existing Clean Removed Folders option has been renamed to Clean Orphaned Images to better reflect what it does.
+* Refiner display in metadata panel: The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
+
+* LoRA display in metadata panel: The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
+
+* Selected file size in status bar: When one or more images are selected, the status bar shows the file size of the selection alongside the result count. A single selected image shows its own size; multiple selected images show the combined total.
+
+* Scheduler display in metadata panel: The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name. Images without scheduler metadata are unaffected.
+
+* Remove Unavailable Folders: Folders deleted outside of Diffusion Toolkit can be cleaned up via Tools → Folders → Remove Unavailable Folders. The existing Clean Removed Folders option has been renamed to Clean Orphaned Images to better reflect what it does.
 
 
 
