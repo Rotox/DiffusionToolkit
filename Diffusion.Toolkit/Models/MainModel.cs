@@ -590,12 +590,6 @@ public class MainModel : BaseNotify
         set => SetField(ref field, value);
     }
 
-    public ICommand CleanRemovedFoldersCommand
-    {
-        get;
-        set => SetField(ref field, value);
-    }
-
     public ICommand RemoveUnavailableFoldersCommand
     {
         get;

@@ -67,9 +67,12 @@ public class UnboundDataWriterQueue
     private int _queueTotal = 0;
     protected readonly Action<int> _debounceQueueNotification;
     private bool _queueRunning;
+    private readonly string? _refreshFilterCatalogsSource;
 
-    public UnboundDataWriterQueue(string completionMessage)
+    public UnboundDataWriterQueue(string completionMessage, string? refreshFilterCatalogsSource = null)
     {
+        _refreshFilterCatalogsSource = refreshFilterCatalogsSource;
+
         _debounceQueueNotification = Utility.Debounce<int>((a) =>
         {
             var diff = a - _queueTotal;
@@ -88,6 +91,10 @@ public class UnboundDataWriterQueue
                 }
             });
 
+            if (_refreshFilterCatalogsSource != null)
+            {
+                ServiceLocator.ScanningService.RefreshFilterCatalogs?.Invoke(_refreshFilterCatalogsSource);
+            }
 
             _queueTotal = a;
         }, 1000);
@@ -231,17 +238,17 @@ public class DatabaseWriterService
 
     public DatabaseWriterService()
     {
-        _addQueue = new UnboundDataWriterQueue("Added {0} images")
+        _addQueue = new UnboundDataWriterQueue("Added {0} images", "watcher:add")
         {
             Write = ServiceLocator.ScanningService.AddImages
         };
 
-        _updateQueue = new UnboundDataWriterQueue("Updated {0} images")
+        _updateQueue = new UnboundDataWriterQueue("Updated {0} images", "watcher:update")
         {
             Write = ServiceLocator.ScanningService.UpdateImages
         };
 
-        _moveQueue = new UnboundDataWriterQueue("Moved {0} images")
+        _moveQueue = new UnboundDataWriterQueue("Moved {0} images", "watcher:move")
         {
             Write = ServiceLocator.ScanningService.UpdateImages
         };

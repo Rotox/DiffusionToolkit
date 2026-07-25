@@ -190,32 +190,6 @@ namespace Diffusion.Toolkit
             return total;
         }
 
-        private async Task CleanRemovedFolders(object o)
-        {
-            var message = "This will remove any remaining images in removed folders from the database. The images on disk will not be deleted.\r\n\r\n" +
-                          "Are you sure you want to continue?";
-
-            var result = await _messagePopupManager.ShowCustom(message, "Clean Removed Folders", PopupButtons.YesNo, 500, 250);
-            if (result == PopupResult.Yes)
-            {
-                await CleanRemovedFoldersInternal();
-            }
-        }
-
-        private async Task CleanRemovedFoldersInternal()
-        {
-            await Task.Run(() =>
-            {
-                var total = _dataStore.CleanRemovedFolders();
-
-                if (total > 0)
-                {
-                    ServiceLocator.SearchService.RefreshResults();
-                    ServiceLocator.ToastService.Toast($"{total} images removed from removed folders", "");
-                }
-            });
-        }
-
         private async Task RemoveUnavailableFolders(object o)
         {
             var window = new RemoveUnavailableFoldersWindow();

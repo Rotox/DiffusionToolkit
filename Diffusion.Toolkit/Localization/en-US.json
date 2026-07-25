@@ -58,7 +58,6 @@
   "Menu.Tools.Folders": "_Folders",
   "Menu.Tools.Folders.FixMissingImages": "_Fix missing images",
   "Menu.Tools.Folders.RemoveExcludedImages": "_Remove excluded images",
-  "Menu.Tools.Folders.CleanRemovedFolders": "_Clean orphaned images",
   "Menu.Tools.Folders.RemoveUnavailableFolders": "_Remove unavailable folders",
   "Menu.Tools.UnavailableFiles": "Scan for Unavailable images",
   "Menu.Help": "_Help",

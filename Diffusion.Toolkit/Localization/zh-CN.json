@@ -61,7 +61,6 @@
   "Menu.Tools.Folders": "_文件夹",
   "Menu.Tools.Folders.FixMissingImages": "_修复缺失图像",
   "Menu.Tools.Folders.RemoveExcludedImages": "_移除排除的图像",
-  "Menu.Tools.Folders.CleanRemovedFolders": "_清理移除的文件夹",
   "Menu.Tools.Tags": "标签",
   "Menu.Tools.Tags.Import": "导入",
   "Menu.Tools.Tags.Export": "导出",
