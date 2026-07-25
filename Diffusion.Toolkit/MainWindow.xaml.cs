@@ -831,6 +831,7 @@ namespace Diffusion.Toolkit
             LoadModels();
             LoadImageModels();
             LoadLoraNames();
+            ServiceLocator.ScanningService.RefreshFilterCatalogs = RefreshImageFilters;
             LoadTags();
             await InitFolders();
 
@@ -936,12 +937,6 @@ namespace Diffusion.Toolkit
             {
                 ShowReleaseNotes();
             }
-            // Cleanup();
-        }
-
-        private async Task Cleanup()
-        {
-            await CleanRemovedFoldersInternal();
         }
 
         //private void NavigatorServiceOnOnNavigate(object? sender, NavigateEventArgs e)

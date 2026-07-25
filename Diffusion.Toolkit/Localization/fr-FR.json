@@ -43,7 +43,6 @@
   "Menu.Tools.Folders": "_Dossiers",
   "Menu.Tools.Folders.FixMissingImages": "_Réparer les images manquantes",
   "Menu.Tools.Folders.RemoveExcludedImages": "_Supprimer les images exclues",
-  "Menu.Tools.Folders.CleanRemovedFolders": "_Nettoyer les dossiers supprimés",
   "Menu.Help": "_Aide",
   "Menu.Help.About": "À propos",
   "Menu.Help.GettingStarted": "Premiers pas",

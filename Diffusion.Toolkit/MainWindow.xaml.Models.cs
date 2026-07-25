@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Diffusion.Civitai;
 using Diffusion.Civitai.Models;
+using Diffusion.Common;
 using System.Diagnostics;
 using System.Threading;
 using Diffusion.Toolkit.Models;
@@ -21,30 +22,57 @@ namespace Diffusion.Toolkit
     {
         public void LoadImageModels()
         {
-            var existingModels = _model.ImageModels == null ? Enumerable.Empty<ModelViewModel>() : _model.ImageModels.ToList();
+            var imageModels = _dataStore.GetImageModels().ToList();
 
-            var imageModels = _dataStore.GetImageModels();
-
-            _model.ImageModels = imageModels.Select(m => new ModelViewModel()
+            Dispatcher.Invoke(() =>
             {
-                IsTicked = existingModels.FirstOrDefault(d => d.Name == m.Name || d.Hash == m.Hash)?.IsTicked ?? false,
-                Name = m.Name ?? ResolveModelName(m.Hash),
-                Hash = m.Hash,
-                ImageCount = m.ImageCount
-            }).Where(m => !string.IsNullOrEmpty(m.Name) && !string.IsNullOrEmpty(m.Hash)).OrderBy(x => x.Name).ToList();
+                var existingModels = _model.ImageModels == null ? Enumerable.Empty<ModelViewModel>() : _model.ImageModels.ToList();
 
-            foreach (var model in _model.ImageModels)
-            {
-                model.PropertyChanged += ImageModelOnPropertyChanged;
-            }
+                foreach (var model in existingModels)
+                {
+                    model.PropertyChanged -= ImageModelOnPropertyChanged;
+                }
 
-            _model.ImageModelNames = imageModels.Where(m => !string.IsNullOrEmpty(m.Name)).Select(m => m.Name).OrderBy(x => x);
+                var newModels = imageModels.Select(m => new ModelViewModel()
+                {
+                    IsTicked = existingModels.FirstOrDefault(d => d.Name == m.Name || d.Hash == m.Hash)?.IsTicked ?? false,
+                    Name = m.Name ?? ResolveModelName(m.Hash),
+                    Hash = m.Hash,
+                    ImageCount = m.ImageCount
+                }).Where(m => !string.IsNullOrEmpty(m.Name) && !string.IsNullOrEmpty(m.Hash)).OrderBy(x => x.Name).ToList();
 
+                foreach (var model in newModels)
+                {
+                    model.PropertyChanged += ImageModelOnPropertyChanged;
+                }
+
+                _model.ImageModels = newModels;
+                _model.ImageModelNames = imageModels.Where(m => !string.IsNullOrEmpty(m.Name)).Select(m => m.Name).OrderBy(x => x).ToList();
+            });
         }
 
         public void LoadLoraNames()
         {
-            _model.LoraNames = _dataStore.GetLoraNames();
+            var loraNames = _dataStore.GetLoraNames().ToList();
+
+            Dispatcher.Invoke(() =>
+            {
+                _model.LoraNames = loraNames;
+            });
+        }
+
+        public void RefreshImageFilters(string source)
+        {
+            try
+            {
+                LoadImageModels();
+                LoadLoraNames();
+                Logger.Log($"RefreshImageFilters ({source}): {_model.ImageModels?.Count() ?? 0} models, {_model.LoraNames?.Count() ?? 0} loras");
+            }
+            catch (Exception e)
+            {
+                Logger.Log($"RefreshImageFilters ({source}) failed: {e.Message}\r\n\r\n{e.StackTrace}");
+            }
         }
 
         private void ImageModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

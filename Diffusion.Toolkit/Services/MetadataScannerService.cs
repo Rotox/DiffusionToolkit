@@ -70,6 +70,7 @@ public class MetadataScannerService
                     }
                 });
 
+                ServiceLocator.ScanningService.RefreshFilterCatalogs?.Invoke("batch");
 
             });
         }

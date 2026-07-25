@@ -19,6 +19,8 @@ namespace Diffusion.Toolkit.Services;
 
 public class ScanningService
 {
+    public Action<string>? RefreshFilterCatalogs;
+
     private string GetLocalizedText(string key)
     {
         return (string)JsonLocalizationProvider.Instance.GetLocalizedObject(key, null, CultureInfo.InvariantCulture);

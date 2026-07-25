@@ -465,40 +465,6 @@ LEFT JOIN (SELECT RootId, COUNT(*) AS Children FROM directoryTree WHERE Depth = 
         //}
 
 
-        public int CleanRemovedFolders()
-        {
-            using var db = OpenConnection();
-
-            db.BeginTransaction();
-
-            // TODO: implement properly
-            //var whereClause = string.Join(" AND ", watchedFolders.Select(f => $"PATH NOT LIKE '{f}\\%'"));
-
-            //var deletedIds = InsertIds(db, "DeletedIds", whereClause);
-
-            //var propsQuery = $"DELETE FROM NodeProperty WHERE NodeId IN (Select Id FROM Node WHERE ImageId IN {deletedIds})";
-            //var propsCommand = db.CreateCommand(propsQuery);
-            //propsCommand.ExecuteNonQuery();
-
-            //var nodesQuery = $"DELETE FROM Node WHERE ImageId IN {deletedIds}";
-            //var nodesCommand = db.CreateCommand(nodesQuery);
-            //nodesCommand.ExecuteNonQuery();
-
-            //var albumQuery = $"DELETE FROM AlbumImage WHERE ImageId IN {deletedIds}";
-            //var albumCommand = db.CreateCommand(albumQuery);
-            //albumCommand.ExecuteNonQuery();
-
-            //var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
-            //var command = db.CreateCommand(query);
-            //var images = command.ExecuteNonQuery();
-
-            //db.Commit();
-
-            //db.Close();
-
-            return 0;
-        }
-
         public int ChangeFolderPath(string path, string newPath)
         {
             using var db = OpenConnection();
@@ -633,38 +599,6 @@ LEFT JOIN (SELECT RootId, COUNT(*) AS Children FROM directoryTree WHERE Depth = 
             }
 
             db.Close();
-
-            return images;
-        }
-
-        public int RemoveFolder(SQLiteConnection db, string path)
-        {
-            var deletedIds = InsertIds(db, "DeletedIds", "FolderId IN (SELECT Id FROM Folder WHERE PATH LIKE @Path || '%')", new Dictionary<string, object>() { { "@Path", path } });
-
-            var propsQuery = $"DELETE FROM NodeProperty WHERE NodeId IN (Select Id FROM Node WHERE ImageId IN {deletedIds})";
-            var propsCommand = db.CreateCommand(propsQuery);
-            propsCommand.ExecuteNonQuery();
-
-            var nodesQuery = $"DELETE FROM Node WHERE ImageId IN {deletedIds}";
-            var nodesCommand = db.CreateCommand(nodesQuery);
-            nodesCommand.ExecuteNonQuery();
-
-            var albumQuery = $"DELETE FROM AlbumImage WHERE ImageId IN {deletedIds}";
-            var albumCommand = db.CreateCommand(albumQuery);
-            albumCommand.ExecuteNonQuery();
-
-            var loraQuery = $"DELETE FROM ImageLora WHERE ImageId IN {deletedIds}";
-            var loraCommand = db.CreateCommand(loraQuery);
-            loraCommand.ExecuteNonQuery();
-
-            var query = $"DELETE FROM Image WHERE Id IN {deletedIds}";
-            var command = db.CreateCommand(query);
-            var images = command.ExecuteNonQuery();
-
-            var deleteFolderQuery = "DELETE FROM Folder WHERE PATH = @Path";
-            var deleteFolderCommand = db.CreateCommand(deleteFolderQuery);
-            deleteFolderCommand.Bind("@Path", path);
-            deleteFolderCommand.ExecuteNonQuery();
 
             return images;
         }
