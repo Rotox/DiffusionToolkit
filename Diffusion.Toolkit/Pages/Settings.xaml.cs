@@ -237,7 +237,7 @@ namespace Diffusion.Toolkit.Pages
                     if (!_dataStore.TryRestoreBackup(dialog.FileName))
                     {
                         MessageBox.Show(this._window,
-                            "The database backup is not a Diffusion Toolkit database.",
+                            "The database backup is not a Diffusion Toolkit Enhanced database.",
                             "Restore Database", MessageBoxButton.OK,
                             MessageBoxImage.Error);
                         return;

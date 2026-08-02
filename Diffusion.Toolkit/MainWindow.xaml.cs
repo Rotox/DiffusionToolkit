@@ -75,7 +75,7 @@ namespace Diffusion.Toolkit
             try
             {
                 Logger.Log("===========================================");
-                Logger.Log($"Started Diffusion Toolkit {AppInfo.Version}");
+                Logger.Log($"Started Diffusion Toolkit Enhanced {AppInfo.Version}");
 
 
                 _configuration = new Configuration<Settings>(AppInfo.SettingsPath, AppInfo.IsPortable);
@@ -119,7 +119,7 @@ namespace Diffusion.Toolkit
                 _model.ReloadHashes = new AsyncCommand<object>(async (o) =>
                 {
                     LoadModels();
-                    await _messagePopupManager.Show("Models have been reloaded", "Diffusion Toolkit", PopupButtons.OK);
+                    await _messagePopupManager.Show("Models have been reloaded", GetLocalizedText("Common.MessageBox.Title"), PopupButtons.OK);
                 });
 
                 _model.SettingsCommand = new RelayCommand<object>(ShowSettings);
@@ -858,7 +858,7 @@ namespace Diffusion.Toolkit
 
                         if (hasUpdate)
                         {
-                            var result = await _messagePopupManager.Show(GetLocalizedText("Main.Update.UpdateAvailable"), "Diffusion Toolkit", PopupButtons.YesNo);
+                            var result = await _messagePopupManager.Show(GetLocalizedText("Main.Update.UpdateAvailable"), GetLocalizedText("Common.MessageBox.Title"), PopupButtons.YesNo);
                             if (result == PopupResult.Yes)
                             {
                                 CallUpdater();

@@ -8,6 +8,9 @@
 	<UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>diffusion-toolkit.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>Diffusion Toolkit Enhanced</Product>
+    <AssemblyTitle>Diffusion Toolkit Enhanced</AssemblyTitle>
+    <AssemblyDescription>Diffusion Toolkit Enhanced — image metadata browser and manager</AssemblyDescription>
   </PropertyGroup>
 
   <ItemGroup>
