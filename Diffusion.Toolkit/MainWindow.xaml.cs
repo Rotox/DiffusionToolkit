@@ -867,7 +867,7 @@ namespace Diffusion.Toolkit
                     }
                     catch (Exception exception)
                     {
-                        await _messagePopupManager.Show(exception.Message, "Update error", PopupButtons.OK);
+                        Logger.Log($"Update check failed: {exception.Message}");
                     }
                 });
             }

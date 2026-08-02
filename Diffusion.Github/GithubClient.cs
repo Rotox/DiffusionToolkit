@@ -40,15 +40,60 @@ public class GithubClient : IDisposable
 
     public async Task<IEnumerable<Release>?> GetReleases(CancellationToken token)
     {
-        var json = await _client.GetStringAsync(new Uri($"https://api.github.com/repos/{_user}/{_repo}/releases"), token);
+        var json = await GetStringWithRedirectAsync(new Uri($"https://api.github.com/repos/{_user}/{_repo}/releases"), token);
         return JsonSerializer.Deserialize<IEnumerable<Release>>(json);
     }
 
     public async Task<IEnumerable<Tag>?> GetTags(CancellationToken token)
     {
-
-        var json = await _client.GetStringAsync(new Uri($"https://api.github.com/repos/{_user}/{_repo}/tags"), token);
+        var json = await GetStringWithRedirectAsync(new Uri($"https://api.github.com/repos/{_user}/{_repo}/tags"), token);
         return JsonSerializer.Deserialize<IEnumerable<Tag>>(json);
+    }
+
+    private async Task<string> GetStringWithRedirectAsync(Uri uri, CancellationToken token, int redirectCount = 0)
+    {
+        var response = await _client.GetAsync(uri, token);
+
+        try
+        {
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Moved:
+                case HttpStatusCode.Found:
+                case HttpStatusCode.RedirectKeepVerb:
+                case HttpStatusCode.PermanentRedirect:
+                {
+                    if (redirectCount >= 3)
+                    {
+                        throw new Exception($"GitHub request to {uri} exceeded the maximum of 3 redirects.");
+                    }
+
+                    var location = response.Headers.Location;
+
+                    if (location == null)
+                    {
+                        throw new Exception($"GitHub request to {uri} returned status {(int)response.StatusCode} ({response.StatusCode}) with no Location header.");
+                    }
+
+                    var target = new Uri(uri, location);
+
+                    if (target.Scheme != Uri.UriSchemeHttps)
+                    {
+                        throw new Exception($"GitHub request to {uri} redirected to a non-HTTPS URL ({target}), which was rejected.");
+                    }
+
+                    return await GetStringWithRedirectAsync(target, token, redirectCount + 1);
+                }
+                case HttpStatusCode.OK:
+                    return await response.Content.ReadAsStringAsync(token);
+                default:
+                    throw new Exception($"GitHub request to {uri} failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+            }
+        }
+        finally
+        {
+            response.Dispose();
+        }
     }
 
     public async Task<Stream> DownloadAsync(string url, CancellationToken token)

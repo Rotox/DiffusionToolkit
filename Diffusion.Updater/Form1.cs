@@ -43,7 +43,7 @@ namespace Diffusion.Updater
             {
                 buttonOK.Enabled = false;
                 _finished = true;
-                buttonCancel.Text = "Close";
+                buttonCancel.Text = "Not Now";
 
                 _updateChecker = new UpdateChecker();
 
@@ -58,7 +58,7 @@ namespace Diffusion.Updater
                 {
                     textBoxNotes.Text = $"Your version is up to date";
                     _finished = true;
-                    buttonCancel.Text = "Close";
+                    buttonCancel.Text = "Not Now";
                 }
 
             }
@@ -202,7 +202,7 @@ namespace Diffusion.Updater
                 _finished = true;
             }
 
-            buttonCancel.Text = "Close";
+            buttonCancel.Text = "Not Now";
         }
     }
 }
