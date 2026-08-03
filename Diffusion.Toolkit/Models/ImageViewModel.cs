@@ -118,6 +118,12 @@ public class ImageViewModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public string Modified
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public ICommand CopyPromptCommand
     {
         get;

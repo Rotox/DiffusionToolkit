@@ -1088,7 +1088,19 @@ namespace Diffusion.Toolkit.Pages
                 {
                     imageViewModel.Id = image.Id;
                     imageViewModel.Favorite = image.Favorite;
-                    imageViewModel.Date = image.CreatedDate.ToString("G", LocalizeDictionary.CurrentCulture);
+
+                    try
+                    {
+                        var fileInfo = new FileInfo(path);
+                        imageViewModel.Date = fileInfo.CreationTime.ToString("G", LocalizeDictionary.CurrentCulture);
+                        imageViewModel.Modified = fileInfo.LastWriteTime.ToString("G", LocalizeDictionary.CurrentCulture);
+                    }
+                    catch
+                    {
+                        imageViewModel.Date = string.Empty;
+                        imageViewModel.Modified = string.Empty;
+                    }
+
                     imageViewModel.Rating = image.Rating;
                     imageViewModel.NSFW = image.NSFW;
                     imageViewModel.ForDeletion = image.ForDeletion;

@@ -253,13 +253,31 @@
                                      Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Path}"/>
                         </local:AccordionControl>
 
-                        <local:AccordionControl x:Name="DateMetadata" 
+                        <local:AccordionControl x:Name="DateMetadata"
                                                    Margin="0,0,0,5"
-                                                   HeaderBackground="#80000000" 
+                                                   HeaderBackground="#80000000"
                                                    State="{Binding MetadataSection.DateState, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=UserControl}, Mode=TwoWay}"  Header="{lex:Loc Metadata.Date}">
-                            <TextBox Background="#00000000" FontSize="14" BorderThickness="0"
-                                     IsReadOnly="True"
-                                     Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Date}"/>
+                            <local:AccordionControl.ButtonAreaContent>
+                                <Grid Background="{x:Null}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="1" Style="{DynamicResource SmallCaps}" Content="{lex:Loc Metadata.DateModified}"/>
+                                </Grid>
+                            </local:AccordionControl.ButtonAreaContent>
+                            <Grid Background="{x:Null}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Background="#00000000" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True"
+                                         Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Date}"/>
+                                <TextBox Grid.Column="1" Background="#00000000" FontSize="14" BorderThickness="0"
+                                         IsReadOnly="True"
+                                         Padding="5" TextWrapping="WrapWithOverflow" Text="{Binding Modified}"/>
+                            </Grid>
                         </local:AccordionControl>
 
                         <local:AccordionControl x:Name="AlbumMetadata" 
