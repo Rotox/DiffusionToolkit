@@ -9,35 +9,41 @@ Diffusion Toolkit is an image metadata-indexer and viewer for AI-generated image
 If you find Diffusion Toolkit valuable, please consider supporting the original author — visit [RupertAvery's GitHub](https://github.com/RupertAvery/DiffusionToolkit) to tip or donate.
 
 
-# Enhancements
+## Enhancements
 
-* Safer database updates: Database migrations now run individually with proper rollback on failure. A failed migration no longer silently blocks all future migrations — it is logged and reported in a message at launch, the app continues to run normally, and the migration retries automatically on the next launch.
+This fork adds the following on top of the original:
 
-* LoRA filter dropdown cleanup: The LoRA filter dropdown now only lists LoRAs still used by at least one image in the library, so entries left behind after deleting images disappear automatically.
+**Filtering and search**
 
-* Multi-value Model Name filter: expand the Model Name row into multiple OR/NOT conditions with is/contains operators
+- Exclude tags from results with a Not filter in the sidebar
+- Search matches filenames as well as prompts
+- Filter by created and modified date, with before / after / on / between modes
+- Filter by model name across multiple values, with is / contains operators
+- Filter by LoRA, including an option to find images that use no LoRA at all
+- Model Name and LoRA dropdowns refresh automatically after a scan, so newly
+  added models and LoRAs appear without restarting
 
-* LoRA filter: filter images by LoRA usage with and/or/not logic and a No LoRA option, backed by automatic indexing of image prompts
+**Metadata panel**
 
-* Model name display: Model names are now read directly from PNG metadata stored in the database instead of looking up checkpoint files on disk. Models no longer present on disk display correctly.
+- Model name read from PNG metadata when it isn't otherwise available
+- Refiner model, switch-at value, and LoRAs displayed
+- Scheduler shown alongside the sampler
+- Date Created and Date Modified shown as separate, clearly labelled fields,
+  read live from the file on disk
 
-* Date filters: Images can now be filtered by creation date and last modified date using a Before / After / On / Between mode selector. The Between mode reveals a second date picker for range filtering. Full dark theme support included.
+**File management**
 
-* Tag exclude filter: A Not checkbox in the sidebar tag list enables negative tag filtering — show images with one tag but not another, or exclude any specific tag from results.
+- Rename File added to the image right-click menu
+- Remove Unavailable Folders, for clearing out folders that no longer exist
+- Selected file size shown in the status bar
 
-* Filename search: Search now matches against filenames in addition to metadata fields, so images can be found by their filename even when metadata is absent or incomplete.
+**Stability**
 
-* Rename images from the context menu: Right-clicking any image in the thumbnail view now shows a Rename option. Enter a new name in the dialog and the file extension is handled automatically. The file is renamed on disk and updated in the library in one step.
-
-* Refiner display in metadata panel: The metadata panel now shows a dedicated Refiner section displaying the refiner model name and switch point.
-
-* LoRA display in metadata panel: The metadata panel now shows a dedicated LoRAs section displaying each LoRA name and weight as a table.
-
-* Selected file size in status bar: When one or more images are selected, the status bar shows the file size of the selection alongside the result count. A single selected image shows its own size; multiple selected images show the combined total.
-
-* Scheduler display in metadata panel: The metadata panel now displays the scheduler (e.g. Karras) next to the sampler name. Images without scheduler metadata are unaffected.
-
-* Remove Unavailable Folders: Folders deleted outside of Diffusion Toolkit can be cleaned up via Tools → Folders → Remove Unavailable Folders. The existing Clean Removed Folders option has been renamed to Clean Orphaned Images to better reflect what it does.
+- In-app update checker, resilient to repository redirects and quiet when
+  GitHub is unreachable
+- Fixed crashes when rating PNG files with non-standard metadata
+- Database upgrades run in isolation, roll back cleanly on failure, and report
+  problems visibly instead of failing silently
 
 
 
