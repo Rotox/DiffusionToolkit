@@ -1158,6 +1158,9 @@ namespace Diffusion.Toolkit.Pages
                     imageViewModel.AestheticScore = $"{parameters.AestheticScore}";
 
                     imageViewModel.Workflow = parameters.Workflow;
+                    imageViewModel.QwenEditHistory = parameters.QwenEditHistory is { Count: > 0 }
+                        ? parameters.QwenEditHistory.Select((text, i) => new QwenEditEntry { Index = i + 1, Text = text }).ToList()
+                        : null;
                     imageViewModel.Type = parameters.Type;
 
                     try

@@ -373,7 +373,33 @@
             </TabItem>
             <TabItem Header="Workflow" Background="Transparent" HorizontalContentAlignment="Stretch">
                 <ScrollViewer Background="Transparent" VerticalScrollBarVisibility="Auto">
-                    <local:ComfyNodeStack Nodes="{Binding Nodes}" Background="Transparent"></local:ComfyNodeStack>
+                    <StackPanel Background="Transparent">
+                        <local:ComfyNodeStack Nodes="{Binding Nodes}" Background="Transparent"></local:ComfyNodeStack>
+                        <Border BorderThickness="1" BorderBrush="{StaticResource SecondaryBrush}" Margin="5"
+                                Visibility="{Binding QwenEditHistory, Converter={StaticResource nullToVis}}">
+                            <StackPanel Background="Transparent">
+                                <Label Background="#80000000" Content="{lex:Loc Metadata.QwenEditHistory}"/>
+                                <ItemsControl ItemsSource="{Binding QwenEditHistory}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="{x:Null}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" FontSize="14" Padding="5" TextAlignment="Center"
+                                                           Foreground="{StaticResource ForegroundBrush}" Text="{Binding Index}"/>
+                                                <TextBox Grid.Column="1" FontSize="14" BorderThickness="0"
+                                                         IsReadOnly="True" Padding="5" Background="Transparent"
+                                                         TextWrapping="WrapWithOverflow" Text="{Binding Text, Mode=OneWay}"
+                                                         PreviewMouseWheel="UIElement_OnPreviewMouseWheel"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Raw Metadata" Background="Transparent" HorizontalContentAlignment="Stretch">

@@ -112,6 +112,12 @@ public class ImageViewModel : BaseNotify
         set => SetField(ref field, value);
     }
 
+    public IReadOnlyList<QwenEditEntry>? QwenEditHistory
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public string Date
     {
         get;
@@ -346,6 +352,12 @@ public class LoraEntry
 {
     public string Name { get; set; }
     public string Weight { get; set; }
+}
+
+public class QwenEditEntry
+{
+    public int Index { get; set; }
+    public string Text { get; set; }
 }
 
 public class TagFilterView : BaseNotify

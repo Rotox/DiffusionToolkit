@@ -37,6 +37,7 @@ public class FileParameters
     public string ErrorMessage { get; set; }
 
     public IReadOnlyCollection<Node>? Nodes { get; set; }
+    public IReadOnlyList<string>? QwenEditHistory { get; set; }
     public string? Hash { get; set; }
     public ImageType Type { get; set; }
 }

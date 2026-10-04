@@ -276,6 +276,11 @@ public class ScanningService
         if (storeMetadata)
         {
             image.Workflow = file.Workflow;
+
+            if (file.QwenEditHistory is { Count: > 0 })
+            {
+                image.Workflow = (file.Workflow ?? "") + "\n" + "qwen_edit_history:" + "\n" + string.Join("\n", file.QwenEditHistory);
+            }
         }
 
         if (!string.IsNullOrEmpty(file.HyperNetwork) && !file.HyperNetworkStrength.HasValue)

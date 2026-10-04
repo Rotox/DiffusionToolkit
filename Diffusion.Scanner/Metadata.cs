@@ -258,6 +258,8 @@ public class Metadata
 
                     decimal aestheticScore = 0;
 
+                    List<string>? qwenEditHistory = null;
+
                     //string tagData = null;
 
                     foreach (var directory in directories)
@@ -385,6 +387,34 @@ public class Metadata
                                             {
                                                 decimal.TryParse(tag.Description[16..], NumberStyles.Any, CultureInfo.InvariantCulture, out aestheticScore);
                                             }
+                                            else if (tag.Description.StartsWith("qwen_edit_history: "))
+                                            {
+                                                try
+                                                {
+                                                    using var historyDoc = JsonDocument.Parse(tag.Description["qwen_edit_history: ".Length..]);
+                                                    if (historyDoc.RootElement.TryGetProperty("prompts", out var promptsElement) && promptsElement.ValueKind == JsonValueKind.Array)
+                                                    {
+                                                        var prompts = new List<string>();
+                                                        foreach (var item in promptsElement.EnumerateArray())
+                                                        {
+                                                            if (item.ValueKind == JsonValueKind.String)
+                                                            {
+                                                                var text = item.GetString();
+                                                                if (!string.IsNullOrEmpty(text))
+                                                                {
+                                                                    prompts.Add(text);
+                                                                }
+                                                            }
+                                                        }
+
+                                                        qwenEditHistory = prompts;
+                                                    }
+                                                }
+                                                catch
+                                                {
+                                                    qwenEditHistory = null;
+                                                }
+                                            }
 
                                         }
                                     }
@@ -433,6 +463,11 @@ public class Metadata
                         {
                             fileParameters.OtherParameters += $"\naesthetic_score: {fileParameters.AestheticScore}";
                         }
+                    }
+
+                    if (fileParameters != null && qwenEditHistory is { Count: > 0 })
+                    {
+                        fileParameters.QwenEditHistory = qwenEditHistory;
                     }
 
 
